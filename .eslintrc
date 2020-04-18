@@ -4,5 +4,10 @@
         "mocha": true,
         "jest": true,
         "commonjs": true
+    },
+
+    "rules": {
+        "consistent-return": "off",
+        "no-plusplus": "off"
     }
 }
