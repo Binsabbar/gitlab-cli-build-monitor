@@ -5,37 +5,22 @@ const { validate } = require('../../src/utils/configValidator.js');
 const path = `${__dirname}/data`;
 const parseYaml = (filename) => yaml.safeLoad(fs.readFileSync(`${path}/${filename}`), 'utf8');
 
-const sharedExmaple = (filename, testcase, expected) => {
-  it(`returns error when value is ${testcase}`, () => {
-    const input = parseYaml(filename);
-    const result = validate(input);
-
-    expect(result).toEqual(expected);
-  });
-};
-
 describe('ConfigValidator', () => {
   describe('when keys are missing', () => {
-    it('returns error given gitlab_access_token is not present  ', () => {
-      const input = parseYaml('missing-token-key.yml');
-      const result = validate(input);
+    const sharedTest = ({ missingKey, testFile }) => {
+      it(`returns error given ${missingKey} is not present`, () => {
+        const input = parseYaml(testFile);
+        const result = validate(input);
 
-      expect(result).toEqual({ error: 'gitlab_access_token is missing' });
-    });
+        expect(result).toEqual({ error: `${missingKey} is missing` });
+      });
+    };
 
-    it('returns error given projects is not present  ', () => {
-      const input = parseYaml('missing-projects-key.yml');
-      const result = validate(input);
-
-      expect(result).toEqual({ error: 'projects is missing' });
-    });
-
-    it('returns error given update_intervals is not present  ', () => {
-      const input = parseYaml('missing-intervals-key.yml');
-      const result = validate(input);
-
-      expect(result).toEqual({ error: 'update_intervals is missing' });
-    });
+    [
+      { missingKey: 'gitlab_access_token', testFile: 'missing-token-key.yml' },
+      { missingKey: 'projects', testFile: 'missing-projects-key.yml' },
+      { missingKey: 'update_intervals', testFile: 'missing-intervals-key.yml' },
+    ].forEach((testCase) => sharedTest(testCase));
   });
 
   describe('when keys are valid', () => {
@@ -54,34 +39,43 @@ describe('ConfigValidator', () => {
   });
 
   describe('when keys type are wrong', () => {
+    const sharedTest = ({ filename, valueType, expected }) => {
+      it(`returns error when value is ${valueType}`, () => {
+        const input = parseYaml(filename);
+        const result = validate(input);
+
+        expect(result).toEqual(expected);
+      });
+    };
+
     describe('gitlab_access_token', () => {
       const expected = { error: 'gitlab_access_token must be string' };
       [
-        ['invalid-token-1.yml', 'number', expected],
-        ['invalid-token-2.yml', 'object', expected],
-        ['invalid-token-3.yml', 'array', expected],
-        ['invalid-token-4.yml', 'boolean', expected],
-      ].forEach((v) => sharedExmaple(...v));
+        { filename: 'invalid-token-1.yml', valueType: 'number', expected },
+        { filename: 'invalid-token-2.yml', valueType: 'object', expected },
+        { filename: 'invalid-token-3.yml', valueType: 'array', expected },
+        { filename: 'invalid-token-4.yml', valueType: 'boolean', expected },
+      ].forEach((testCase) => sharedTest(testCase));
     });
 
     describe('projects', () => {
       const expected = { error: 'projects must be array' };
       [
-        ['invalid-projects-1.yml', 'number', expected],
-        ['invalid-projects-2.yml', 'string', expected],
-        ['invalid-projects-3.yml', 'object', expected],
-        ['invalid-projects-4.yml', 'boolean', expected],
-      ].forEach((v) => sharedExmaple(...v));
+        { filename: 'invalid-projects-1.yml', valueType: 'number', expected },
+        { filename: 'invalid-projects-2.yml', valueType: 'string', expected },
+        { filename: 'invalid-projects-3.yml', valueType: 'object', expected },
+        { filename: 'invalid-projects-4.yml', valueType: 'boolean', expected },
+      ].forEach((testCase) => sharedTest(testCase));
     });
 
     describe('update_intervals', () => {
       const expected = { error: 'update_intervals must be number' };
       [
-        ['invalid-intervals-1.yml', 'array', expected],
-        ['invalid-intervals-2.yml', 'object', expected],
-        ['invalid-intervals-3.yml', 'string', expected],
-        ['invalid-intervals-4.yml', 'boolean', expected],
-      ].forEach((v) => sharedExmaple(...v));
+        { filename: 'invalid-intervals-1.yml', valueType: 'array', expected },
+        { filename: 'invalid-intervals-2.yml', valueType: 'object', expected },
+        { filename: 'invalid-intervals-3.yml', valueType: 'string', expected },
+        { filename: 'invalid-intervals-4.yml', valueType: 'boolean', expected },
+      ].forEach((testCase) => sharedTest(testCase));
     });
   });
 });
