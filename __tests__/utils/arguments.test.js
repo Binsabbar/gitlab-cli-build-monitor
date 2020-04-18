@@ -52,6 +52,7 @@ describe('script argument', () => {
     it('parses the file into argvs', async () => {
       const { argvs } = await parse(argument.commandParser, '--file ./example-config.yml');
       const expectedConfigs = {
+        baseUrl: 'https://gitlab.com',
         accessToken: 'some-token-goes-here',
         updateIntervals: 50,
         projects: [
