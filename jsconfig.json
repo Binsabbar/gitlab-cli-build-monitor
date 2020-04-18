@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "module": "commonJS",
+    },
+    "moduleResolution": "node",
+    "checkJs": true,
+    "baseUrl": "./",
+    "exclude": ["node_modules"],
+    "typeAcquisition": {
+      "include": ["jest"]
+    }
+  }

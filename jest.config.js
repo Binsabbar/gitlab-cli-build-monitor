@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
@@ -12,7 +13,7 @@ module.exports = {
   // browser: false,
 
   // The directory where Jest should store its cached dependency information
-  cacheDirectory: "/tmp/jest_rs",
+  cacheDirectory: '/tmp/jest_rs',
 
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
@@ -24,11 +25,11 @@ module.exports = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: [
-    "/node_modules/"
+    '/node_modules/',
   ],
 
   // A list of reporter names that Jest uses when writing coverage reports
@@ -132,7 +133,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -142,8 +143,8 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    "**/__tests__/**/*.[jt]s?(x)",
-    "**/?(*.)+(spec|test).[tj]s?(x)"
+    '**/__tests__/**/*.[jt]s?(x)',
+    '**/?(*.)+(spec|test).[tj]s?(x)',
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
