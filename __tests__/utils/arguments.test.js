@@ -9,7 +9,7 @@ const parse = (commandParser, arg) => new Promise((resolve) => {
 describe('script argument', () => {
   const expectedDefaultOutput = `Options:
   --version   Show version number                                      [boolean]
-  -f, --file  pipeline configuration file                    [string] [required]
+  -f, --file  path to pipeline configuration file            [string] [required]
   --help      Show help                                                [boolean]`;
   it('prints help menu when --help is given', async () => {
     const { output } = await parse(argument.commandParser, '--help');
@@ -34,6 +34,21 @@ describe('script argument', () => {
       const { output } = await parse(argument.commandParser, '--file');
 
       expect(output).toEqual('');
+    });
+  });
+
+  describe('when config file is passed', () => {
+    it('parses the file into argvs', async () => {
+      const { argvs } = await parse(argument.commandParser, '--file ./example-config.yml');
+      const expectedConfigs = {
+        gitlab_access_token: 'some-token-goes-here',
+        update_intervals: 50,
+        projects: [
+          'groupA/projectA', 'userA/projectB', 'groupA/projectB', 'groupA/projectV',
+        ],
+      };
+
+      expect(argvs).toMatchObject(expectedConfigs);
     });
   });
 });
