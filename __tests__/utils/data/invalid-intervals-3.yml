@@ -1,0 +1,7 @@
+gitlab_access_token: 'string token'
+projects:
+  - groupA/projectA
+  - userA/projectB
+  - groupA/projectB
+  - groupA/projectV
+update_intervals: '123'

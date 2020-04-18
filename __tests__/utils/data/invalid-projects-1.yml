@@ -1,0 +1,3 @@
+gitlab_access_token: 'string value'
+projects: 123
+update_intervals: 50
