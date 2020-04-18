@@ -1,7 +1,7 @@
-gitlab_access_token: 1233
+accessToken: 1233
 projects:
   - groupA/projectA
   - userA/projectB
   - groupA/projectB
   - groupA/projectV
-update_intervals: 50
+updateIntervals: 50

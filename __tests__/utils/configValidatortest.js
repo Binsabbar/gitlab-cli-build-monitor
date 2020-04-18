@@ -17,9 +17,9 @@ describe('ConfigValidator', () => {
     };
 
     [
-      { missingKey: 'gitlab_access_token', testFile: 'missing-token-key.yml' },
+      { missingKey: 'accessToken', testFile: 'missing-token-key.yml' },
       { missingKey: 'projects', testFile: 'missing-projects-key.yml' },
-      { missingKey: 'update_intervals', testFile: 'missing-intervals-key.yml' },
+      { missingKey: 'updateIntervals', testFile: 'missing-intervals-key.yml' },
     ].forEach((testCase) => sharedTest(testCase));
   });
 
@@ -29,9 +29,9 @@ describe('ConfigValidator', () => {
       const result = validate(input);
 
       const expected = {
-        gitlab_access_token: 'some-token-goes-here',
+        accessToken: 'some-token-goes-here',
         projects: ['groupA/projectA'],
-        update_intervals: 50,
+        updateIntervals: 50,
       };
 
       expect(result).toEqual(expected);
@@ -48,8 +48,8 @@ describe('ConfigValidator', () => {
       });
     };
 
-    describe('gitlab_access_token', () => {
-      const expected = { error: 'gitlab_access_token must be string' };
+    describe('accessToken', () => {
+      const expected = { error: 'accessToken must be string' };
       [
         { filename: 'invalid-token-1.yml', valueType: 'number', expected },
         { filename: 'invalid-token-2.yml', valueType: 'object', expected },
@@ -68,8 +68,8 @@ describe('ConfigValidator', () => {
       ].forEach((testCase) => sharedTest(testCase));
     });
 
-    describe('update_intervals', () => {
-      const expected = { error: 'update_intervals must be number' };
+    describe('updateIntervals', () => {
+      const expected = { error: 'updateIntervals must be number' };
       [
         { filename: 'invalid-intervals-1.yml', valueType: 'array', expected },
         { filename: 'invalid-intervals-2.yml', valueType: 'object', expected },

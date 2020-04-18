@@ -1,4 +1,4 @@
-gitlab_access_token: 'string value'
+accessToken: 'string value'
 projects:
   projectA: path/to/pproject
-update_intervals: 50
+updateIntervals: 50

@@ -1,4 +1,4 @@
-gitlab_access_token: some-token-goes-here
+accessToken: some-token-goes-here
 projects:
   - groupA/projectA
   - userA/projectB
