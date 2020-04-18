@@ -1,5 +1,9 @@
-const requiredKeys = ['projects', 'accessToken', 'updateIntervals'];
+const requiredKeys = ['baseUrl', 'projects', 'accessToken', 'updateIntervals'];
 const keysTypes = {
+  baseUrl: {
+    validate: (arg) => typeof arg === 'string',
+    errMessage: 'baseUrl must be string',
+  },
   accessToken: {
     validate: (arg) => typeof arg === 'string',
     errMessage: 'accessToken must be string',

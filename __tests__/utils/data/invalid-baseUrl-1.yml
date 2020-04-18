@@ -1,5 +1,5 @@
-baseUrl: https://gitlab.com 
-accessToken: true
+baseUrl: 12234
+accessToken: 1233
 projects:
   - groupA/projectA
   - userA/projectB

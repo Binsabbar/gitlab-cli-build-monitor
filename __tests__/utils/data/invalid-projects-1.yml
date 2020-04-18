@@ -1,3 +1,4 @@
+baseUrl: https://gitlab.com 
 accessToken: 'string value'
 projects: 123
 updateIntervals: 50

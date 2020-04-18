@@ -1,8 +1,7 @@
-baseUrl: https://gitlab.com 
-accessToken: true
+accessToken: some-token-goes-here
 projects:
   - groupA/projectA
   - userA/projectB
   - groupA/projectB
   - groupA/projectV
-updateIntervals: 50
+updateIntervals: 19
