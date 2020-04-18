@@ -25,7 +25,7 @@ jobs:
       - run: npm ci
       - run: npm install
       - run: npm run build --if-present
-      - run: npm coverage
+      - run: npm run coverage
         env:
           CI: true
       - name: Cache
