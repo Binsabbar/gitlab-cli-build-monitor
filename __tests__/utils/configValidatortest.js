@@ -81,7 +81,6 @@ describe('ConfigValidator', () => {
         ['invalid-intervals-2.yml', 'object', expected],
         ['invalid-intervals-3.yml', 'string', expected],
         ['invalid-intervals-4.yml', 'boolean', expected],
-        // ['invalid-projects-4.yml', 'boolean', expected],
       ].forEach((v) => sharedExmaple(...v));
     });
   });
