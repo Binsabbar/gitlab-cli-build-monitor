@@ -1,17 +1,6 @@
 #!/usr/bin/env node
 
-const chalk = require("chalk");
-const boxen = require("boxen");
+const { commandParser } = require('./utils/arguments');
 
-const greeting = chalk.white.bold("Hello!");
-
-const boxenOptions = {
-  padding: 1,
-  margin: 1,
-  borderStyle: "round",
-  borderColor: "green",
-  backgroundColor: "#555555"
-};
-const msgBox = boxen(greeting, boxenOptions);
-
-console.log(msgBox);
+const { gitlab_access_token, projects, update_intervals } = commandParser.argv;
+console.log({ gitlab_access_token, projects, update_intervals });
