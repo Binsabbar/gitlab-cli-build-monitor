@@ -1,6 +1,6 @@
 {
   "name": "pipeline-monitor",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "package for monitoring gitlab cicd",
   "main": "src/index.js",
   "bin": {
@@ -18,7 +18,13 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "^6.8.0",
-    "jest": "^25.2.7"
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0",
+    "jest": "^25.2.7",
+    "@types/jest": "^25.2.1"
   },
   "dependencies": {
     "axios": "^0.19.2",

@@ -1,8 +1,13 @@
-const yargs = require("yargs");
+const yargs = require('yargs');
 
-const options = yargs
-  .usage("Usage: -n <name>")
-  .option("n", { alias: "name", describe: "Your name", type: "string", demandOption: true })
-  .argv;
+const commandParser = yargs
+  .options({
+    f: {
+      alias: 'file',
+      demandOption: true,
+      describe: 'pipeline configuration file',
+    },
+  })
+  .help();
 
-exports.options = options
+exports.commandParser = commandParser;
