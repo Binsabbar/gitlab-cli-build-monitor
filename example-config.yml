@@ -1,3 +1,4 @@
+baseUrl: https://gitlab.com
 accessToken: some-token-goes-here
 projects:
   - groupA/projectA
