@@ -3,4 +3,4 @@ projects:
   - userA/projectB
   - groupA/projectB
   - groupA/projectV
-update_intervals: 50
+updateIntervals: 50

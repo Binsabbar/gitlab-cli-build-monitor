@@ -1,7 +1,7 @@
-gitlab_access_token: 'string token'
+accessToken: 'string token'
 projects:
   - groupA/projectA
   - userA/projectB
   - groupA/projectB
   - groupA/projectV
-update_intervals: true
+updateIntervals: true

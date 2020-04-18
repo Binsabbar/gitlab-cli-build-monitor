@@ -1,16 +1,16 @@
-const requiredKeys = ['projects', 'gitlab_access_token', 'update_intervals'];
+const requiredKeys = ['projects', 'accessToken', 'updateIntervals'];
 const keysTypes = {
-  gitlab_access_token: {
+  accessToken: {
     validate: (arg) => typeof arg === 'string',
-    errMessage: 'gitlab_access_token must be string',
+    errMessage: 'accessToken must be string',
   },
   projects: {
     validate: (arg) => Array.isArray(arg),
     errMessage: 'projects must be array',
   },
-  update_intervals: {
+  updateIntervals: {
     validate: (args) => typeof args === 'number',
-    errMessage: 'update_intervals must be number',
+    errMessage: 'updateIntervals must be number',
   },
 };
 
