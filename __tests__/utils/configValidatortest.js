@@ -17,6 +17,7 @@ describe('ConfigValidator', () => {
     };
 
     [
+      { missingKey: 'baseUrl', testFile: 'missing-baseUrl-key.yml' },
       { missingKey: 'accessToken', testFile: 'missing-token-key.yml' },
       { missingKey: 'projects', testFile: 'missing-projects-key.yml' },
       { missingKey: 'updateIntervals', testFile: 'missing-intervals-key.yml' },
@@ -29,6 +30,7 @@ describe('ConfigValidator', () => {
       const result = validate(input);
 
       const expected = {
+        baseUrl: 'https://gitlab.com',
         accessToken: 'some-token-goes-here',
         projects: ['groupA/projectA'],
         updateIntervals: 50,
@@ -47,6 +49,16 @@ describe('ConfigValidator', () => {
         expect(result).toEqual(expected);
       });
     };
+
+    describe('baseUrl', () => {
+      const expected = { error: 'baseUrl must be string' };
+      [
+        { filename: 'invalid-baseUrl-1.yml', valueType: 'number', expected },
+        { filename: 'invalid-baseUrl-2.yml', valueType: 'boolean', expected },
+        { filename: 'invalid-baseUrl-3.yml', valueType: 'array', expected },
+        { filename: 'invalid-baseUrl-4.yml', valueType: 'object', expected },
+      ].forEach((testCase) => sharedTest(testCase));
+    });
 
     describe('accessToken', () => {
       const expected = { error: 'accessToken must be string' };

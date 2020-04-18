@@ -1,3 +1,4 @@
+baseUrl: https://gitlab.com 
 accessToken: 1233
 projects:
   - groupA/projectA

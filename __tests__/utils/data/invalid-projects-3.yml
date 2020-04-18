@@ -1,3 +1,4 @@
+baseUrl: https://gitlab.com 
 accessToken: 'string value'
 projects:
   projectA: path/to/pproject
