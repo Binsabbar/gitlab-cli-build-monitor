@@ -6,6 +6,7 @@ const commandParser = yargs
       alias: 'file',
       demandOption: true,
       describe: 'pipeline configuration file',
+      string: true,
     },
   })
   .help();
