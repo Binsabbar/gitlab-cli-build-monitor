@@ -1,7 +1,12 @@
+
 class GitlabConfig {
-  constructor(accessToken, projectsPaths, updateFrequncy) {
+  constructor({
+    baseUrl, accessToken,
+    projects, updateIntervals,
+  }) {
+    this.baseUrl = baseUrl;
     this.accessToken = accessToken;
-    this.projectsPaths = projectsPaths;
-    this.updateFrequncy = updateFrequncy;
+    this.projects = projects;
+    this.updateIntervals = updateIntervals;
   }
 }
