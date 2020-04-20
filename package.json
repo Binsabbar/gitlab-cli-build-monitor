@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "jest",
-    "coverage": "npm test -- --collect-coverage"
+    "coverage": "npm test -- --collect-coverage",
+    "lint": "./node_modules/eslint/bin/eslint.js ."
   },
   "keywords": [
     "cicd",
