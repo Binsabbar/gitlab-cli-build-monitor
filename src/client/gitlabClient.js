@@ -22,7 +22,8 @@ class GitlabClient {
   }
 
   getProject({ projectId }) {
-    const path = gitlabApiPaths.project(projectId);
+    const path = gitlabApiPaths.project({ projectId });
+
     return sendRequest(this.instance, path);
   }
 
