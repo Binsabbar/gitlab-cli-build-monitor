@@ -2,7 +2,7 @@ const axios = require('axios').default;
 const { gitlabApiPaths } = require('./gitlabApiPaths');
 
 
-const sendRequest = (instance, path) => instance.get(path)
+const sendRequest = (instance, path, config) => instance.get(path, config)
   .then((response) => response.data)
   .catch((err) => {
     if (err.response) {
@@ -24,6 +24,14 @@ class GitlabClient {
   getProject({ projectId }) {
     const path = gitlabApiPaths.project(projectId);
     return sendRequest(this.instance, path);
+  }
+
+  getProjectPipelines({ projectId, updatedAfter }) {
+    const path = gitlabApiPaths.pipelines({ projectId });
+    const requestConfig = {
+      params: { updated_after: updatedAfter, sort: 'desc' },
+    };
+    return sendRequest(this.instance, path, requestConfig);
   }
 }
 
