@@ -1,6 +1,17 @@
 const axios = require('axios').default;
 const { gitlabApiPaths } = require('./gitlabApiPaths');
 
+
+const sendRequest = (instance, path) => instance.get(path)
+  .then((response) => response.data)
+  .catch((err) => {
+    if (err.response) {
+      const { status, data } = err.response;
+      return { status, data };
+    }
+    return { message: err.message };
+  });
+
 class GitlabClient {
   constructor({ baseUrl, accessToken }) {
     this.gitlabToken = accessToken;
@@ -12,15 +23,7 @@ class GitlabClient {
 
   getProject({ projectId }) {
     const path = gitlabApiPaths.project(projectId);
-    return this.instance.get(path)
-      .then((response) => response.data)
-      .catch((err) => {
-        if (err.response) {
-          const { status, data } = err.response;
-          return { status, data };
-        }
-        return { message: err.message };
-      });
+    return sendRequest(this.instance, path);
   }
 }
 
