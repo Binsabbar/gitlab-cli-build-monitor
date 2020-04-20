@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const mockAxios = require('axios');
 const { GitlabClient } = require('../../src/client/gitlabClient');
 
@@ -23,12 +24,14 @@ describe('gitlab client', () => {
           'Private-Token': config.accessToken,
         },
       };
+
       expect(mockAxios.create).toHaveBeenCalledWith(expect.objectContaining(expectedConfig));
     });
 
-    it('sets baseUrl header from accessToken', () => {
+    it('sets baseURL header from baseUrl', () => {
       const _ = new GitlabClient(config);
       const expectedConfig = { baseURL: config.baseUrl };
+
       expect(mockAxios.create).toHaveBeenCalledWith(expect.objectContaining(expectedConfig));
     });
   });
@@ -41,6 +44,7 @@ describe('gitlab client', () => {
       axiosGetMock.mockResolvedValue(mockedResponse);
 
       const response = await client.getProject({ projectId: 23 });
+
       expect(response).toEqual(mockedResponse.data);
     });
 
@@ -49,6 +53,7 @@ describe('gitlab client', () => {
       axiosGetMock.mockRejectedValue(mockedResponse);
 
       const response = await client.getProject({ projectId: 23 });
+
       expect(response).toEqual({ status: 404, data: 'error message' });
     });
   });
