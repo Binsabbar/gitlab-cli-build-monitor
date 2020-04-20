@@ -2,5 +2,5 @@
 
 const { commandParser } = require('./utils/arguments');
 
-const { gitlab_access_token, projects, update_intervals } = commandParser.argv;
-console.log({ gitlab_access_token, projects, update_intervals });
+const { accessToken, projects, updateIntervals } = commandParser.argv;
+console.log({ accessToken, projects, updateIntervals });
