@@ -19,6 +19,7 @@ class GitlabClient {
           const { status, data } = err.response;
           return { status, data };
         }
+        return { message: err.message };
       });
   }
 }
