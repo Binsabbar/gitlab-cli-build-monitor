@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "jest --testPathIgnorePatterns=/__tests__/__integration__/",
+    "test:all": "jest",
     "test:integration": "jest /__tests__/__integration__/",
     "coverage": "npm test -- --collect-coverage",
     "lint": "./node_modules/eslint/bin/eslint.js ."
