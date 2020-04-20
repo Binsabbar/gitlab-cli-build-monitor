@@ -12,6 +12,15 @@ const axiosCreateMock = {
 mockAxios.create.mockReturnValue(axiosCreateMock);
 
 describe('gitlab client', () => {
+  let client;
+  beforeEach(() => {
+    client = new GitlabClient('token');
+  });
+
+  afterEach(() => {
+    axiosGetMock.mockReset();
+  });
+
   describe('Constructor', () => {
     const config = {
       baseUrl: 'https://gitlab.com',
@@ -37,8 +46,6 @@ describe('gitlab client', () => {
   });
 
   describe('Get Project', () => {
-    const client = new GitlabClient('token');
-
     it('returns project object when response is successful', async () => {
       const mockedResponse = { data: { projectId: 12, path: '/sample/project' } };
       axiosGetMock.mockResolvedValue(mockedResponse);
@@ -62,6 +69,50 @@ describe('gitlab client', () => {
       axiosGetMock.mockRejectedValue(mockedResponse);
 
       const response = await client.getProject({ projectId: 23 });
+
+      expect(response).toEqual({ message: 'error occured' });
+    });
+  });
+
+  describe('Get Project Pipelines', () => {
+    const mockedResponse = { data: { pipelines: [{ pipelineId: 1 }, { pipelineId: 2 }] } };
+    const requestArgs = { projectId: 23, updatedAfter: 'some-date' };
+
+    it('returns projects pipeline', async () => {
+      axiosGetMock.mockResolvedValue(mockedResponse);
+
+      const response = await client.getProjectPipelines(requestArgs);
+
+      expect(response).toEqual({ pipelines: [{ pipelineId: 1 }, { pipelineId: 2 }] });
+    });
+
+    it('passes updated_after and sort when getting projects pipelines', async () => {
+      axiosGetMock.mockResolvedValue(expect.anything);
+
+      await client.getProjectPipelines(requestArgs);
+
+      expect(axiosGetMock).toHaveBeenCalledWith(expect.anything(String), expect.objectContaining({
+        params: {
+          updated_after: 'some-date',
+          sort: 'desc',
+        },
+      }));
+    });
+
+    it('returns response status and data when response error occurs', async () => {
+      const mockedErrResp = { response: { status: 404, data: 'error message', headers: {} } };
+      axiosGetMock.mockRejectedValue(mockedErrResp);
+
+      const response = await client.getProjectPipelines(requestArgs);
+
+      expect(response).toEqual({ status: 404, data: 'error message' });
+    });
+
+    it('returns error message when error is not a response error', async () => {
+      const mockedErrResp = { message: 'error occured' };
+      axiosGetMock.mockRejectedValue(mockedErrResp);
+
+      const response = await client.getProjectPipelines(requestArgs);
 
       expect(response).toEqual({ message: 'error occured' });
     });
