@@ -56,5 +56,14 @@ describe('gitlab client', () => {
 
       expect(response).toEqual({ status: 404, data: 'error message' });
     });
+
+    it('returns error message when error is not a response error', async () => {
+      const mockedResponse = { message: 'error occured' };
+      axiosGetMock.mockRejectedValue(mockedResponse);
+
+      const response = await client.getProject({ projectId: 23 });
+
+      expect(response).toEqual({ message: 'error occured' });
+    });
   });
 });
