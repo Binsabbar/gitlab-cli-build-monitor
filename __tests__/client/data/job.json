@@ -1,0 +1,78 @@
+{
+    "id": 10946,
+    "status": "failed",
+    "stage": "build",
+    "name": "build-node",
+    "ref": "my-ref",
+    "tag": false,
+    "coverage": null,
+    "allow_failure": false,
+    "created_at": "2000-04-22T13:39:13.283Z",
+    "started_at": "2000-04-22T13:39:15.737Z",
+    "finished_at": "2000-04-22T13:39:32.939Z",
+    "duration": 17.202178,
+    "user": {
+      "id": 12,
+      "name": "some-user",
+      "username": "some-username",
+      "state": "active",
+      "avatar_url": "",
+      "web_url": "",
+      "created_at": "2000-01-26T12:43:49.041Z",
+      "bio": "",
+      "location": "",
+      "public_email": "",
+      "skype": "",
+      "linkedin": "",
+      "twitter": "",
+      "website_url": "",
+      "organization": "",
+      "job_title": ""
+    },
+    "commit": {
+      "id": "234234234234",
+      "short_id": "120a41",
+      "created_at": "2000-04-22T16:39:00.000+03:00",
+      "parent_ids": [
+        "423232324"
+      ],
+      "title": "commit title",
+      "message": "commit message\n",
+      "author_name": "author",
+      "author_email": "user@email",
+      "authored_date": "2000-04-22T16:39:00.000+03:00",
+      "committer_name": "Uo",
+      "committer_email": "user@email",
+      "committed_date": "2000-04-22T16:39:00.000+03:00",
+      "web_url": "some-stuff"
+    },
+    "pipeline": {
+      "id": 12121,
+      "sha": "rererer",
+      "ref": "12112",
+      "status": "121212",
+      "created_at": "2000-04-22T13:39:13.272Z",
+      "updated_at": "2000-04-22T13:39:33.245Z",
+      "web_url": "/pipelines/423232"
+    },
+    "web_url": "/-/jobs/10946",
+    "artifacts": [
+      {
+        "file_type": "trace",
+        "size": 332,
+        "filename": "job.log",
+        "file_format": null
+      }
+    ],
+    "runner": {
+      "id": 311,
+      "description": "runner",
+      "ip_address": "xx.xxx.xxx.xx",
+      "active": true,
+      "is_shared": false,
+      "name": "a-runner",
+      "online": true,
+      "status": "online"
+    },
+    "artifacts_expire_at": null
+  }
