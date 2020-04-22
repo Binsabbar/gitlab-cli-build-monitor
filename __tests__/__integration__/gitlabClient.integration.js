@@ -61,9 +61,7 @@ describe('Gitlab Client', () => {
     const client = new GitlabClient({ baseUrl, accessToken });
     const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
     const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
-    const expectedSchema = [
-      'id', 'ref', 'status', 'stage', 'allow_failure', 'duration', 'finished_at'];
-
+    const expectedSchema = ['id', 'name', 'stage', 'status', 'finishedAt', 'startedAt', 'ref'];
     const jobs = await client.getPipelineJobs({ projectId, pipelineId: pipelines[0].id });
 
     expect(Object.keys(jobs[0])).toEqual(expect.arrayContaining(expectedSchema));
