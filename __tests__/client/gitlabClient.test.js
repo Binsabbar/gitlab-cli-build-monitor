@@ -96,7 +96,24 @@ describe('GitlabClient', () => {
     });
   });
 
+  describe('getPipelineJobs', () => {
+    const mockedResponse = { data: { jobs: { stage: 'build', pipelineId: 1, status: 'failed' } } };
+    const requestArgs = { projectId: 23, pipelineId: 12 };
+
+    it('returns pipeline details', async () => {
+      axiosGetMock.mockResolvedValue(mockedResponse);
+
+      const response = await client.getPipelineJobs(requestArgs);
+
+      expect(response).toEqual({ jobs: { stage: 'build', pipelineId: 1, status: 'failed' } });
+    });
+  });
+
   describe('Errors', () => {
+    const projectId = 12;
+    const pipelineId = 12;
+    const updatedAfter = 'some-date';
+
     const sharedTests = (name, method) => {
       describe(`${name}`, () => {
         it('returns response status and data when response error occurs', async () => {
@@ -118,9 +135,6 @@ describe('GitlabClient', () => {
       });
     };
 
-    const projectId = 12;
-    const pipelineId = 12;
-    const updatedAfter = 'some-date';
     [
       {
         name: 'getProject',
@@ -133,6 +147,10 @@ describe('GitlabClient', () => {
       {
         name: 'getPipelineDetails',
         method: () => client.getPipelineDetails({ projectId, pipelineId }),
+      },
+      {
+        name: 'getPipelineJobs',
+        method: () => client.getPipelineJobs({ projectId, pipelineId }),
       },
     ].forEach((testCase) => sharedTests(testCase.name, testCase.method));
   });

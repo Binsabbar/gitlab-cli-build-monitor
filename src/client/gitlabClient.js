@@ -38,6 +38,11 @@ class GitlabClient {
     const path = gitlabApiPaths.projectPipeline({ projectId, pipelineId });
     return sendRequest(this.instance, path);
   }
+
+  getPipelineJobs({ projectId, pipelineId }) {
+    const path = gitlabApiPaths.projectPipelineJobs({ projectId, pipelineId });
+    return sendRequest(this.instance, path);
+  }
 }
 
 exports.GitlabClient = GitlabClient;
