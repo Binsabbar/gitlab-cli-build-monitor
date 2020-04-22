@@ -1,6 +1,11 @@
 /* eslint-disable no-unused-vars */
 const mockAxios = require('axios');
 const { GitlabClient } = require('../../src/client/gitlabClient');
+const { Project, Pipeline, Job } = require('../../src/models');
+
+const project = require('./data/project.json');
+const pipeline = require('./data/pipeline.json');
+const job = require('./data/job.json');
 
 jest.mock('axios');
 const axiosGetMock = jest.fn();
@@ -48,29 +53,37 @@ describe('GitlabClient', () => {
 
   describe('getProject', () => {
     it('returns project object when response is successful', async () => {
-      const mockedResponse = { data: { projectId: 12, path: '/sample/project' } };
-      axiosGetMock.mockResolvedValue(mockedResponse);
+      axiosGetMock.mockResolvedValue({ data: project });
+      const expected = new Project(
+        { id: 123123, path_with_namespace: 'mygroup/my-project', name: 'my-project' },
+      );
 
       const response = await client.getProject({ projectId: 23 });
 
-      expect(response).toEqual(mockedResponse.data);
+      expect(response).toEqual(expected);
     });
   });
 
   describe('getProjectPipelines', () => {
-    const mockedResponse = { data: { pipelines: [{ pipelineId: 1 }, { pipelineId: 2 }] } };
     const requestArgs = { projectId: 23, updatedAfter: 'some-date' };
 
     it('returns projects pipeline', async () => {
-      axiosGetMock.mockResolvedValue(mockedResponse);
+      axiosGetMock.mockResolvedValue({ data: [pipeline, { ...pipeline, id: 1 }] });
+      const expected = {
+        id: 231313,
+        ref: 'my-ref',
+        status: 'failed',
+        created_at: '2000-04-22T13:39:13.272Z',
+        updated_at: '2000-04-22T13:39:33.245Z',
+      };
 
       const response = await client.getProjectPipelines(requestArgs);
 
-      expect(response).toEqual({ pipelines: [{ pipelineId: 1 }, { pipelineId: 2 }] });
+      expect(response).toEqual([new Pipeline(expected), new Pipeline({ ...expected, id: 1 })]);
     });
 
     it('passes updated_after and sort when getting projects pipelines', async () => {
-      axiosGetMock.mockResolvedValue(expect.anything);
+      axiosGetMock.mockResolvedValue({ data: [pipeline] });
 
       await client.getProjectPipelines(requestArgs);
 
@@ -97,15 +110,23 @@ describe('GitlabClient', () => {
   });
 
   describe('getPipelineJobs', () => {
-    const mockedResponse = { data: { jobs: { stage: 'build', pipelineId: 1, status: 'failed' } } };
     const requestArgs = { projectId: 23, pipelineId: 12 };
 
     it('returns pipeline details', async () => {
-      axiosGetMock.mockResolvedValue(mockedResponse);
+      axiosGetMock.mockResolvedValue({ data: [job, { ...job, id: 1 }] });
+      const expected = {
+        id: 10946,
+        name: 'build-node',
+        stage: 'build',
+        status: 'failed',
+        started_at: '2000-04-22T13:39:15.737Z',
+        finished_at: '2000-04-22T13:39:32.939Z',
+        ref: 'my-ref',
+      };
 
       const response = await client.getPipelineJobs(requestArgs);
 
-      expect(response).toEqual({ jobs: { stage: 'build', pipelineId: 1, status: 'failed' } });
+      expect(response).toEqual([new Job(expected), new Job({ ...expected, id: 1 })]);
     });
   });
 
