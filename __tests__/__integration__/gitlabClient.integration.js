@@ -44,7 +44,7 @@ describe('Gitlab Client', () => {
     expect(Object.keys(pipelines[0])).toEqual(expect.arrayContaining(expectedSchema));
   });
 
-  it('returns project pipelines given valid project id and time', async () => {
+  it('returns pipeline details given project and pipeline ids', async () => {
     const client = new GitlabClient({ baseUrl, accessToken });
     const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
     const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
@@ -55,5 +55,17 @@ describe('Gitlab Client', () => {
     const pipeline = await client.getPipelineDetails({ projectId, pipelineId: pipelines[0].id });
 
     expect(Object.keys(pipeline)).toEqual(expect.arrayContaining(expectedSchema));
+  });
+
+  it('returns pipeline jobs given project and pipeline ids', async () => {
+    const client = new GitlabClient({ baseUrl, accessToken });
+    const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
+    const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
+    const expectedSchema = [
+      'id', 'ref', 'status', 'stage', 'allow_failure', 'duration', 'finished_at'];
+
+    const jobs = await client.getPipelineJobs({ projectId, pipelineId: pipelines[0].id });
+
+    expect(Object.keys(jobs[0])).toEqual(expect.arrayContaining(expectedSchema));
   });
 });
