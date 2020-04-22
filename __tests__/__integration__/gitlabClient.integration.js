@@ -10,23 +10,19 @@ describe('Gitlab Client', () => {
 
   it('returns object containing status code and data when response is not 200', async () => {
     const client = new GitlabClient({ baseUrl, accessToken: 'invalid' });
-    const expectedSchema = {
+    const expectedSchema = new Error({
       status: expect.any(Number),
       data: expect.objectContaining({ message: expect.any(String) }),
-    };
+    });
 
-    const result = await client.getProject({ projectId });
-
-    expect(result).toMatchObject(expectedSchema);
+    return expect(client.getProject({ projectId })).rejects.toEqual(expectedSchema);
   });
 
   it('returns object containg error message when request is invalid', async () => {
     const client = new GitlabClient({ baseUrl: 'invalid url', accessToken });
-    const expectedSchema = { message: expect.any(String) };
+    const expectedSchema = new Error({ message: expect.any(String) });
 
-    const result = await client.getProject({ projectId });
-
-    expect(result).toMatchObject(expectedSchema);
+    return expect(client.getProject({ projectId })).rejects.toEqual(expectedSchema);
   });
 
   it('returns project given valid project id', async () => {
