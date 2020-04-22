@@ -102,19 +102,18 @@ describe('GitlabClient', () => {
         it('returns response status and data when response error occurs', async () => {
           const mockedErrResp = { response: { status: 404, data: 'error message', headers: {} } };
           axiosGetMock.mockRejectedValue(mockedErrResp);
+          const expected = new Error({ status: 404, data: 'error message' });
 
-          const response = await method();
-
-          expect(response).toEqual({ status: 404, data: 'error message' });
+          return expect(method())
+            .rejects.toEqual(expected);
         });
 
         it('returns error message when error is not a response error', async () => {
           const mockedErrResp = { message: 'error occured' };
           axiosGetMock.mockRejectedValue(mockedErrResp);
+          const expected = new Error({ message: 'error occured' });
 
-          const response = await method();
-
-          expect(response).toEqual({ message: 'error occured' });
+          return expect(method()).rejects.toEqual(expected);
         });
       });
     };

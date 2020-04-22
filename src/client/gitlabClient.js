@@ -6,9 +6,9 @@ const sendRequest = (instance, path, config) => instance.get(path, config)
   .catch((err) => {
     if (err.response) {
       const { status, data } = err.response;
-      return { status, data };
+      return Promise.reject(new Error({ status, data }));
     }
-    return { message: err.message };
+    return Promise.reject(new Error({ message: err.message }));
   });
 
 class GitlabClient {
