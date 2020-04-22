@@ -1,5 +1,6 @@
 const axios = require('axios').default;
 const { gitlabApiPaths } = require('./gitlabApiPaths');
+const { GitlabParser } = require('./gitlabParser');
 
 const sendRequest = (instance, path, config) => instance.get(path, config)
   .then((response) => response.data)
@@ -23,7 +24,8 @@ class GitlabClient {
   getProject({ projectId }) {
     const path = gitlabApiPaths.project({ projectId });
 
-    return sendRequest(this.instance, path);
+    return sendRequest(this.instance, path)
+      .then((data) => GitlabParser.parseProject(data));
   }
 
   getProjectPipelines({ projectId, updatedAfter }) {
@@ -31,7 +33,14 @@ class GitlabClient {
     const requestConfig = {
       params: { updated_after: updatedAfter, sort: 'desc' },
     };
-    return sendRequest(this.instance, path, requestConfig);
+    return sendRequest(this.instance, path, requestConfig)
+      .then((data) => {
+        const pipelines = [];
+        data.forEach((pipeline) => {
+          pipelines.push(GitlabParser.parsePipeline(pipeline));
+        });
+        return pipelines;
+      });
   }
 
   getPipelineDetails({ projectId, pipelineId }) {
@@ -41,7 +50,14 @@ class GitlabClient {
 
   getPipelineJobs({ projectId, pipelineId }) {
     const path = gitlabApiPaths.projectPipelineJobs({ projectId, pipelineId });
-    return sendRequest(this.instance, path);
+    return sendRequest(this.instance, path)
+      .then((data) => {
+        const jobs = [];
+        data.forEach((job) => {
+          jobs.push(GitlabParser.parseJob(job));
+        });
+        return jobs;
+      });
   }
 }
 
