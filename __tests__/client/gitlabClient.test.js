@@ -11,7 +11,7 @@ const axiosCreateMock = {
 
 mockAxios.create.mockReturnValue(axiosCreateMock);
 
-describe('gitlab client', () => {
+describe('GitlabClient', () => {
   let client;
   beforeEach(() => {
     client = new GitlabClient('token');
@@ -26,6 +26,7 @@ describe('gitlab client', () => {
       baseUrl: 'https://gitlab.com',
       accessToken: 'my-token',
     };
+
     it('sets token header from accessToken', () => {
       const _ = new GitlabClient(config);
       const expectedConfig = {
@@ -45,7 +46,7 @@ describe('gitlab client', () => {
     });
   });
 
-  describe('Get Project', () => {
+  describe('getProject', () => {
     it('returns project object when response is successful', async () => {
       const mockedResponse = { data: { projectId: 12, path: '/sample/project' } };
       axiosGetMock.mockResolvedValue(mockedResponse);
@@ -54,27 +55,9 @@ describe('gitlab client', () => {
 
       expect(response).toEqual(mockedResponse.data);
     });
-
-    it('returns response status and data when response error occurs', async () => {
-      const mockedResponse = { response: { status: 404, data: 'error message', headers: {} } };
-      axiosGetMock.mockRejectedValue(mockedResponse);
-
-      const response = await client.getProject({ projectId: 23 });
-
-      expect(response).toEqual({ status: 404, data: 'error message' });
-    });
-
-    it('returns error message when error is not a response error', async () => {
-      const mockedResponse = { message: 'error occured' };
-      axiosGetMock.mockRejectedValue(mockedResponse);
-
-      const response = await client.getProject({ projectId: 23 });
-
-      expect(response).toEqual({ message: 'error occured' });
-    });
   });
 
-  describe('Get Project Pipelines', () => {
+  describe('getProjectPipelines', () => {
     const mockedResponse = { data: { pipelines: [{ pipelineId: 1 }, { pipelineId: 2 }] } };
     const requestArgs = { projectId: 23, updatedAfter: 'some-date' };
 
@@ -98,23 +81,60 @@ describe('gitlab client', () => {
         },
       }));
     });
+  });
 
-    it('returns response status and data when response error occurs', async () => {
-      const mockedErrResp = { response: { status: 404, data: 'error message', headers: {} } };
-      axiosGetMock.mockRejectedValue(mockedErrResp);
+  describe('getPipelineDetails', () => {
+    const mockedResponse = { data: { pipeline: { pipelineId: 1, status: 'failed' } } };
+    const requestArgs = { projectId: 23, pipelineId: 12 };
 
-      const response = await client.getProjectPipelines(requestArgs);
+    it('returns pipeline details', async () => {
+      axiosGetMock.mockResolvedValue(mockedResponse);
 
-      expect(response).toEqual({ status: 404, data: 'error message' });
+      const response = await client.getPipelineDetails(requestArgs);
+
+      expect(response).toEqual({ pipeline: { pipelineId: 1, status: 'failed' } });
     });
+  });
 
-    it('returns error message when error is not a response error', async () => {
-      const mockedErrResp = { message: 'error occured' };
-      axiosGetMock.mockRejectedValue(mockedErrResp);
+  describe('Errors', () => {
+    const sharedTests = (name, method) => {
+      describe(`${name}`, () => {
+        it('returns response status and data when response error occurs', async () => {
+          const mockedErrResp = { response: { status: 404, data: 'error message', headers: {} } };
+          axiosGetMock.mockRejectedValue(mockedErrResp);
 
-      const response = await client.getProjectPipelines(requestArgs);
+          const response = await method();
 
-      expect(response).toEqual({ message: 'error occured' });
-    });
+          expect(response).toEqual({ status: 404, data: 'error message' });
+        });
+
+        it('returns error message when error is not a response error', async () => {
+          const mockedErrResp = { message: 'error occured' };
+          axiosGetMock.mockRejectedValue(mockedErrResp);
+
+          const response = await method();
+
+          expect(response).toEqual({ message: 'error occured' });
+        });
+      });
+    };
+
+    const projectId = 12;
+    const pipelineId = 12;
+    const updatedAfter = 'some-date';
+    [
+      {
+        name: 'getProject',
+        method: () => client.getProject({ projectId }),
+      },
+      {
+        name: 'getProjectPipelines',
+        method: () => client.getProjectPipelines({ projectId, updatedAfter }),
+      },
+      {
+        name: 'getPipelineDetails',
+        method: () => client.getPipelineDetails({ projectId, pipelineId }),
+      },
+    ].forEach((testCase) => sharedTests(testCase.name, testCase.method));
   });
 });
