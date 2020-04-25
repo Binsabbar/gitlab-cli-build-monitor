@@ -9,10 +9,7 @@ const job = require('./data/job.json');
 
 jest.mock('axios');
 const axiosGetMock = jest.fn();
-const axiosCreateMock = {
-
-  get: axiosGetMock,
-};
+const axiosCreateMock = { get: axiosGetMock };
 
 mockAxios.create.mockReturnValue(axiosCreateMock);
 
@@ -27,18 +24,11 @@ describe('GitlabClient', () => {
   });
 
   describe('Constructor', () => {
-    const config = {
-      baseUrl: 'https://gitlab.com',
-      accessToken: 'my-token',
-    };
+    const config = { baseUrl: 'https://gitlab.com', accessToken: 'my-token' };
 
     it('sets token header from accessToken', () => {
       const _ = new GitlabClient(config);
-      const expectedConfig = {
-        headers: {
-          'Private-Token': config.accessToken,
-        },
-      };
+      const expectedConfig = { headers: { 'Private-Token': config.accessToken } };
 
       expect(mockAxios.create).toHaveBeenCalledWith(expect.objectContaining(expectedConfig));
     });
@@ -174,5 +164,45 @@ describe('GitlabClient', () => {
         method: () => client.getPipelineJobs({ projectId, pipelineId }),
       },
     ].forEach((testCase) => sharedTests(testCase.name, testCase.method));
+  });
+
+  describe('Project ID is path of the project', () => {
+    const projectId = 'groupA/projectA-C_V1';
+    const pipelineId = 12;
+    const updatedAfter = 'some-date';
+    const expected = 'groupA%2FprojectA-C_V1';
+
+    it('getProject: url encodes projects name when sending the request', async () => {
+      axiosGetMock.mockResolvedValue({ data: { a: 1 } });
+
+      await client.getProject({ projectId });
+
+      expect(axiosGetMock).toHaveBeenCalledWith(expect.stringContaining(expected), undefined);
+    });
+
+    it('getProjectPipelines: url encodes projects name when sending the request', async () => {
+      axiosGetMock.mockResolvedValue({ data: [1, 2, 4] });
+
+      await client.getProjectPipelines({ projectId, updatedAfter });
+
+      expect(axiosGetMock)
+        .toHaveBeenCalledWith(expect.stringContaining(expected), expect.any(Object));
+    });
+
+    it('getPipelineDetails: url encodes projects name when sending the request', async () => {
+      axiosGetMock.mockResolvedValue({ data: { a: 1 } });
+
+      await client.getPipelineDetails({ projectId, pipelineId });
+
+      expect(axiosGetMock).toHaveBeenCalledWith(expect.stringContaining(expected), undefined);
+    });
+
+    it('getPipelineJobs: url encodes projects name when sending the request', async () => {
+      axiosGetMock.mockResolvedValue({ data: [1, 2, 4] });
+
+      await client.getPipelineJobs({ projectId, pipelineId });
+
+      expect(axiosGetMock).toHaveBeenCalledWith(expect.stringContaining(expected), undefined);
+    });
   });
 });
