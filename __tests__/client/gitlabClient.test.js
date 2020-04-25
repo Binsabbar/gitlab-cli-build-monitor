@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const mockAxios = require('axios');
-const { GitlabClient } = require('../../src/client/gitlabClient');
+const { GitlabClient } = require('../../src/client');
 const { Project, Pipeline, Job } = require('../../src/models');
 
 const project = require('./data/project.json');
@@ -130,18 +130,17 @@ describe('GitlabClient', () => {
         it('returns response status and data when response error occurs', async () => {
           const mockedErrResp = { response: { status: 404, data: 'error message', headers: {} } };
           axiosGetMock.mockRejectedValue(mockedErrResp);
-          const expected = new Error({ status: 404, data: 'error message' });
+          const expected = { status: 404, message: 'error message', projectId };
 
-          return expect(method())
-            .rejects.toEqual(expected);
+          return expect(method()).rejects.toEqual(expect.objectContaining(expected));
         });
 
         it('returns error message when error is not a response error', async () => {
           const mockedErrResp = { message: 'error occured' };
           axiosGetMock.mockRejectedValue(mockedErrResp);
-          const expected = new Error({ message: 'error occured' });
+          const expected = { status: undefined, message: 'error occured', projectId };
 
-          return expect(method()).rejects.toEqual(expected);
+          return expect(method()).rejects.toEqual(expect.objectContaining(expected));
         });
       });
     };

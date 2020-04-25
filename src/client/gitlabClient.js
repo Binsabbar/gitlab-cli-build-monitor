@@ -1,15 +1,16 @@
 const axios = require('axios').default;
 const { gitlabApiPaths } = require('./gitlabApiPaths');
 const { GitlabParser } = require('./gitlabParser');
+const { GitlabClientError } = require('./gitlabClientError');
 
-const sendRequest = (instance, path, config) => instance.get(path, config)
+const sendRequest = (instance, path, projectId, config) => instance.get(path, config)
   .then((response) => response.data)
   .catch((err) => {
     if (err.response) {
       const { status, data } = err.response;
-      return Promise.reject(new Error({ status, data }));
+      return Promise.reject(new GitlabClientError({ message: data, status, projectId }));
     }
-    return Promise.reject(new Error({ message: err.message }));
+    return Promise.reject(new GitlabClientError({ message: err.message, projectId }));
   });
 
 class GitlabClient {
@@ -25,17 +26,16 @@ class GitlabClient {
     const encodedId = encodeURIComponent(projectId);
     const path = gitlabApiPaths.project({ projectId: encodedId });
 
-    return sendRequest(this.instance, path)
+    return sendRequest(this.instance, path, projectId)
       .then((data) => GitlabParser.parseProject(data));
   }
 
   getProjectPipelines({ projectId, updatedAfter }) {
     const encodedId = encodeURIComponent(projectId);
     const path = gitlabApiPaths.pipelines({ projectId: encodedId });
-    const requestConfig = {
-      params: { updated_after: updatedAfter, sort: 'desc' },
-    };
-    return sendRequest(this.instance, path, requestConfig)
+    const requestConfig = { params: { updated_after: updatedAfter, sort: 'desc' } };
+
+    return sendRequest(this.instance, path, projectId, requestConfig)
       .then((data) => {
         const pipelines = [];
         data.forEach((pipeline) => {
@@ -48,13 +48,14 @@ class GitlabClient {
   getPipelineDetails({ projectId, pipelineId }) {
     const encodedId = encodeURIComponent(projectId);
     const path = gitlabApiPaths.projectPipeline({ projectId: encodedId, pipelineId });
-    return sendRequest(this.instance, path);
+    return sendRequest(this.instance, path, projectId);
   }
 
   getPipelineJobs({ projectId, pipelineId }) {
     const encodedId = encodeURIComponent(projectId);
     const path = gitlabApiPaths.projectPipelineJobs({ projectId: encodedId, pipelineId });
-    return sendRequest(this.instance, path)
+
+    return sendRequest(this.instance, path, projectId)
       .then((data) => {
         const jobs = [];
         data.forEach((job) => {
