@@ -22,14 +22,16 @@ class GitlabClient {
   }
 
   getProject({ projectId }) {
-    const path = gitlabApiPaths.project({ projectId });
+    const encodedId = encodeURIComponent(projectId);
+    const path = gitlabApiPaths.project({ projectId: encodedId });
 
     return sendRequest(this.instance, path)
       .then((data) => GitlabParser.parseProject(data));
   }
 
   getProjectPipelines({ projectId, updatedAfter }) {
-    const path = gitlabApiPaths.pipelines({ projectId });
+    const encodedId = encodeURIComponent(projectId);
+    const path = gitlabApiPaths.pipelines({ projectId: encodedId });
     const requestConfig = {
       params: { updated_after: updatedAfter, sort: 'desc' },
     };
@@ -44,12 +46,14 @@ class GitlabClient {
   }
 
   getPipelineDetails({ projectId, pipelineId }) {
-    const path = gitlabApiPaths.projectPipeline({ projectId, pipelineId });
+    const encodedId = encodeURIComponent(projectId);
+    const path = gitlabApiPaths.projectPipeline({ projectId: encodedId, pipelineId });
     return sendRequest(this.instance, path);
   }
 
   getPipelineJobs({ projectId, pipelineId }) {
-    const path = gitlabApiPaths.projectPipelineJobs({ projectId, pipelineId });
+    const encodedId = encodeURIComponent(projectId);
+    const path = gitlabApiPaths.projectPipelineJobs({ projectId: encodedId, pipelineId });
     return sendRequest(this.instance, path)
       .then((data) => {
         const jobs = [];
