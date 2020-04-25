@@ -10,3 +10,5 @@ class GitlabConfig {
     this.updateIntervals = updateIntervals;
   }
 }
+
+exports.GitlabConfig = GitlabConfig;
