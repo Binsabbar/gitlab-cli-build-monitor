@@ -15,9 +15,9 @@ class PipelineBuilder {
 
   withStatus(status) { this.status = status; return this; }
 
-  createdAt(createdAt) { this.createdAt = createdAt; return this; }
+  setCreatedAt(createdAt) { this.createdAt = createdAt; return this; }
 
-  updatedAt(updatedAt) { this.updatedAt = updatedAt; return this; }
+  setUpdatedAt(updatedAt) { this.updatedAt = updatedAt; return this; }
 
   build() {
     return new Pipeline({
