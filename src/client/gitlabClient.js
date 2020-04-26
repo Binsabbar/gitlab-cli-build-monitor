@@ -30,10 +30,10 @@ class GitlabClient {
       .then((data) => GitlabParser.parseProject(data));
   }
 
-  getProjectPipelines({ projectId, updatedAfter }) {
+  getProjectPipelines({ projectId }) {
     const encodedId = encodeURIComponent(projectId);
     const path = gitlabApiPaths.pipelines({ projectId: encodedId });
-    const requestConfig = { params: { updated_after: updatedAfter, sort: 'desc' } };
+    const requestConfig = { params: { sort: 'desc' } };
 
     return sendRequest(this.instance, path, projectId, requestConfig)
       .then((data) => {

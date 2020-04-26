@@ -34,17 +34,15 @@ describe('Gitlab Client', () => {
   });
 
   it('returns project pipelines given valid project id and time', async () => {
-    const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
     const expectedSchema = ['id', 'ref', 'status'];
 
-    const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
+    const pipelines = await client.getProjectPipelines({ projectId });
 
     expect(Object.keys(pipelines[0])).toEqual(expect.arrayContaining(expectedSchema));
   });
 
   it('returns pipeline details given project and pipeline ids', async () => {
-    const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
-    const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
+    const pipelines = await client.getProjectPipelines({ projectId });
     const expectedSchema = [
       'id', 'ref', 'status', 'started_at',
       'finished_at', 'created_at', 'updated_at'];
@@ -55,8 +53,7 @@ describe('Gitlab Client', () => {
   });
 
   it('returns pipeline jobs given project and pipeline ids', async () => {
-    const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
-    const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
+    const pipelines = await client.getProjectPipelines({ projectId });
     const expectedSchema = ['id', 'name', 'stage', 'status', 'finishedAt', 'startedAt', 'ref'];
     const jobs = await client.getPipelineJobs({ projectId, pipelineId: pipelines[0].id });
 
