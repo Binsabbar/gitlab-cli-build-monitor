@@ -7,25 +7,25 @@ dotenv.config({ path: envPath });
 
 describe('Gitlab Client', () => {
   const { accessToken, baseUrl, projectId } = process.env;
+  const client = new GitlabClient({ baseUrl, accessToken });
 
   it('returns object containing status code and data when response is not 200', async () => {
-    const client = new GitlabClient({ baseUrl, accessToken: 'invalid' });
+    const invalidClient = new GitlabClient({ baseUrl, accessToken: 'invalid' });
     const expectedSchema = { message: expect.any(String), projectId, status: 401 };
 
-    return expect(client.getProject({ projectId }))
+    return expect(invalidClient.getProject({ projectId }))
       .rejects.toEqual(expect.objectContaining(expectedSchema));
   });
 
   it('returns object containg error message when request is invalid', async () => {
-    const client = new GitlabClient({ baseUrl: 'invalid url', accessToken });
+    const invalidClient = new GitlabClient({ baseUrl: 'invalid url', accessToken });
     const expectedSchema = { message: expect.any(String), projectId, status: undefined };
 
-    return expect(client.getProject({ projectId }))
+    return expect(invalidClient.getProject({ projectId }))
       .rejects.toEqual(expect.objectContaining(expectedSchema));
   });
 
   it('returns project given valid project id', async () => {
-    const client = new GitlabClient({ baseUrl, accessToken });
     const expectedSchema = ['id', 'name'];
 
     const project = await client.getProject({ projectId });
@@ -35,7 +35,6 @@ describe('Gitlab Client', () => {
 
   it('returns project pipelines given valid project id and time', async () => {
     const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
-    const client = new GitlabClient({ baseUrl, accessToken });
     const expectedSchema = ['id', 'ref', 'status'];
 
     const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
@@ -44,7 +43,6 @@ describe('Gitlab Client', () => {
   });
 
   it('returns pipeline details given project and pipeline ids', async () => {
-    const client = new GitlabClient({ baseUrl, accessToken });
     const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
     const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
     const expectedSchema = [
@@ -57,7 +55,6 @@ describe('Gitlab Client', () => {
   });
 
   it('returns pipeline jobs given project and pipeline ids', async () => {
-    const client = new GitlabClient({ baseUrl, accessToken });
     const updatedAfter = new Date('2020-04-21T15:19:01.975Z').toISOString();
     const pipelines = await client.getProjectPipelines({ projectId, updatedAfter });
     const expectedSchema = ['id', 'name', 'stage', 'status', 'finishedAt', 'startedAt', 'ref'];
