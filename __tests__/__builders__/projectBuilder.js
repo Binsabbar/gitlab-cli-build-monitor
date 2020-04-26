@@ -23,7 +23,7 @@ class ProjectBuilder {
   }
 
   build() {
-    return new Project({ ...this });
+    return new Project({ ...this, path_with_namespace: this.pathWithNamespace });
   }
 }
 
