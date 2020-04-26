@@ -1,10 +1,13 @@
 let intervalId;
 
-function loopTask(callback, intervals) {
-  intervalId = setInterval(
-    callback,
-    intervals * 1000,
-  );
+function loopTask(funcToLoop, args, intervals) {
+  return new Promise((resolve, reject) => {
+    intervalId = setInterval(() => {
+      funcToLoop(args)
+        .then(resolve)
+        .catch(reject);
+    }, intervals * 1000);
+  });
 }
 
 function stopTask() {
