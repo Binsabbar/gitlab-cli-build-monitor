@@ -79,7 +79,6 @@ describe('GitlabClient', () => {
 
       expect(axiosGetMock).toHaveBeenCalledWith(expect.anything(String), expect.objectContaining({
         params: {
-          updated_after: 'some-date',
           sort: 'desc',
         },
       }));
@@ -123,7 +122,6 @@ describe('GitlabClient', () => {
   describe('Errors', () => {
     const projectId = 12;
     const pipelineId = 12;
-    const updatedAfter = 'some-date';
 
     const sharedTests = (name, method) => {
       describe(`${name}`, () => {
@@ -152,7 +150,7 @@ describe('GitlabClient', () => {
       },
       {
         name: 'getProjectPipelines',
-        method: () => client.getProjectPipelines({ projectId, updatedAfter }),
+        method: () => client.getProjectPipelines({ projectId }),
       },
       {
         name: 'getPipelineDetails',
@@ -168,7 +166,6 @@ describe('GitlabClient', () => {
   describe('Project ID is path of the project', () => {
     const projectId = 'groupA/projectA-C_V1';
     const pipelineId = 12;
-    const updatedAfter = 'some-date';
     const expected = 'groupA%2FprojectA-C_V1';
 
     it('getProject: url encodes projects name when sending the request', async () => {
@@ -182,7 +179,7 @@ describe('GitlabClient', () => {
     it('getProjectPipelines: url encodes projects name when sending the request', async () => {
       axiosGetMock.mockResolvedValue({ data: [1, 2, 4] });
 
-      await client.getProjectPipelines({ projectId, updatedAfter });
+      await client.getProjectPipelines({ projectId });
 
       expect(axiosGetMock)
         .toHaveBeenCalledWith(expect.stringContaining(expected), expect.any(Object));
