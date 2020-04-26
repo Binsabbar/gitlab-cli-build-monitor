@@ -19,11 +19,11 @@ class JobBuilder {
 
   withStatus(status) { this.status = status; return this; }
 
-  withStage(stage) { this.stage = stage; return this; }
+  atStage(stage) { this.stage = stage; return this; }
 
-  startedAt(startedAt) { this.startedAt = startedAt; return this; }
+  setStartedAt(startedAt) { this.startedAt = startedAt; return this; }
 
-  finishedAt(finishedAt) { this.finishedAt = finishedAt; return this; }
+  setFinishedAt(finishedAt) { this.finishedAt = finishedAt; return this; }
 
   build() {
     return new Job(
