@@ -1,9 +1,9 @@
+const s = require('./scheduler');
 
 class PipelinesMonitor {
-  constructor({ gitlabClient, gitlabConfig, errorHandler }) {
+  constructor({ gitlabClient, gitlabConfig }) {
     this.gitlabConfig = gitlabConfig;
     this.gitlabClient = gitlabClient;
-    this.errorHandler = errorHandler;
   }
 
   check() {
@@ -13,16 +13,15 @@ class PipelinesMonitor {
       promises.push(this.gitlabClient.getProject({ projectId }));
     });
 
-    return Promise.allSettled(promises).then((values) => this.handleCheck(values));
+    return Promise.allSettled(promises).then((values) => PipelinesMonitor.handleCheck(values));
   }
 
-  handleCheck(values) {
+  static handleCheck(values) {
     const rejected = values.filter((v) => v.status === 'rejected');
     if (rejected.length === 0) return true;
 
-    const reasons = [];
-    rejected.forEach((reason) => reasons.push(reason));
-    return Promise.reject(this.errorHandler(reasons));
+    const reasons = rejected.map((rejectedPromise) => rejectedPromise.reason);
+    return Promise.reject(reasons);
   }
 }
 

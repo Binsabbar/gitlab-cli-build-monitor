@@ -6,8 +6,6 @@ const { GitlabConfig } = require('../../src/utils/gitlabConfig');
 
 jest.mock('../../src/client/gitlabClient.js');
 
-const mockedHandler = jest.fn();
-
 describe('PipelinesMonitor', () => {
   const config = {
     baseUrl: 'https://gitlab.com',
@@ -20,41 +18,51 @@ describe('PipelinesMonitor', () => {
 
   describe('check', () => {
     const monitor = new PipelinesMonitor(
-      { gitlabClient, gitlabConfig, errorHandler: mockedHandler },
+      { gitlabClient, gitlabConfig },
     );
 
     beforeEach(() => {
       jest.resetAllMocks();
       when(gitlabClient.getProject)
         .calledWith(expect.anything()).mockRejectedValue('make your mock specific');
-      when(mockedHandler)
-        .calledWith(expect.any(Array)).mockReturnValue('mocked error message');
     });
 
-    it('returns a resolved promise when all projects exist', () => {
-      config.projects.forEach((projectId) => {
-        when(gitlabClient.getProject).calledWith({ projectId }).mockResolvedValueOnce();
+    describe('when all projects exist', () => {
+      it('returns a resolved promise to true', () => {
+        config.projects.forEach((projectId) => {
+          when(gitlabClient.getProject).calledWith({ projectId }).mockResolvedValueOnce();
+        });
+
+        return expect(monitor.check()).resolves.toEqual(true);
       });
-
-      return expect(monitor.check()).resolves.toEqual(true);
     });
 
-    it('returns a rejected promise when some projects do not exist', () => {
-      when(gitlabClient.getProject)
-        .calledWith({ projectId: config.projects[0] }).mockResolvedValueOnce();
-      when(gitlabClient.getProject)
-        .calledWith({ projectId: config.projects[1] }).mockRejectedValue();
+    describe('when some projects exist', () => {
+      it('returns a rejected promise with list of rejection reasons', () => {
+        when(gitlabClient.getProject)
+          .calledWith({ projectId: config.projects[0] }).mockResolvedValueOnce();
+        when(gitlabClient.getProject)
+          .calledWith({ projectId: config.projects[1] }).mockRejectedValue(new Error('err'));
 
 
-      return expect(monitor.check()).rejects.toEqual('mocked error message');
-    });
-
-    it('returns a rejected promise when all projects do not exist', () => {
-      config.projects.forEach((projectId) => {
-        when(gitlabClient.getProject).calledWith({ projectId }).mockRejectedValue();
+        return expect(monitor.check()).rejects.toEqual([new Error('err')]);
       });
-
-      return expect(monitor.check()).rejects.toEqual('mocked error message');
     });
+
+    describe('when all projects do not exist', () => {
+      it('returns a rejected promise when all projects do not exist', () => {
+        const err = new Error('err');
+        config.projects.forEach((projectId) => {
+          when(gitlabClient.getProject).calledWith({ projectId }).mockRejectedValue(err);
+        });
+
+        return expect(monitor.check()).rejects.toEqual([err, err]);
+      });
+    });
+  });
+
+
+  describe('start', () => {
+
   });
 });
