@@ -5,7 +5,7 @@ class Project {
     this.id = id;
     this.pathWithNamespace = path_with_namespace;
     this.name = name;
-    this.pipelines = undefined;
+    this.pipelines = [];
     this.currentPipelineId = undefined;
   }
 }
