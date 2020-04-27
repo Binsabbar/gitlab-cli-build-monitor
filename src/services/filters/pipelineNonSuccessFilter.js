@@ -1,9 +1,12 @@
-
-const nonSuccessStatus = ['failed', 'pending', 'canceled', 'running'];
+const NON_SUCCESS_STATUS = {
+  FAILED: 'failed',
+  RUNNING: 'running',
+  PENDING: 'pending',
+};
 
 const isNoneSuccess = (pipeline) => {
   const { status } = pipeline;
-  return nonSuccessStatus.indexOf(status) !== -1;
+  return Object.values(NON_SUCCESS_STATUS).indexOf(status) !== -1;
 };
 
 const filter = (pipelines) => {

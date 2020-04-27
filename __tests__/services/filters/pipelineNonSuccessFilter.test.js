@@ -33,15 +33,6 @@ describe('pipelineNonSuccessFilter', () => {
       expect(pipeline).toEqual(pendingPipeline);
     });
 
-    it('returns pipeline that has canceled status', () => {
-      const canceledPipeline = new PipelineBuilder().withId('2').withStatus('canceled').build();
-      pipelines.splice(2, 0, canceledPipeline);
-
-      const pipeline = filter(pipelines);
-
-      expect(pipeline).toEqual(canceledPipeline);
-    });
-
     it('returns pipeline that has running status', () => {
       const runningPipeline = new PipelineBuilder().withId('2').withStatus('running').build();
       pipelines.splice(2, 0, runningPipeline);
