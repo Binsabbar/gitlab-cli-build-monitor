@@ -37,7 +37,7 @@ class PipelinesMonitor {
     projects.forEach((projectId) => {
       const jobPromise = this.gitlabClient.getProject({ projectId })
         .then((project) => this._getPipelines(project))
-        .then(([project, pipelines]) => this._getJobs(project, pipelines))
+        .then(([project, pipelines]) => this._getPipelineJobs(project, pipelines))
         .then(([project, jobs]) => this._getRecentStatus(project, jobs));
       promises.push(jobPromise);
     });
@@ -50,7 +50,7 @@ class PipelinesMonitor {
     return Promise.all([project, pipelines]);
   }
 
-  _getJobs(project, pipelines) {
+  _getPipelineJobs(project, pipelines) {
     const jobs = this.gitlabClient.getPipelineJobs({
       projectId: project.id,
       pipelineId: pipelines[0].id,
