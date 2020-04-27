@@ -4,17 +4,35 @@ const { GitlabClientError } = require('../../src/client');
 describe('serviceErrorHandler', () => {
   it('returns list of projects alongside the error', () => {
     const error1 = new GitlabClientError({ status: 401, projectId: '1' });
-    const error2 = new GitlabClientError({ status: 404, projectId: '2' });
     const error3 = new GitlabClientError({ status: 405, projectId: 'group/A' });
 
-    const expected = 'The following errors occured\n'
-    + 'projectId: status\n'
-    + '1: 401\n'
-    + '2: 404\n'
-    + 'group/A: 405\n';
+    const result = handleGitlabClientErrors([error1, error3]);
 
-    const result = handleGitlabClientErrors([error1, error2, error3]);
+    expect(result).not.toMatch(/.*Message.*/);
+    expect(result).toMatch(/.*Project ID.*Status.*/);
+    expect(result).toMatch(/.*1.*401.*/);
+    expect(result).toMatch(/.*group\/A.*405.*/);
+  });
 
-    expect(result).toBe(expected);
+  it('returns message of the error if it is not of type GitlabClientError', () => {
+    const error1 = new Error('Error');
+
+    const result = handleGitlabClientErrors([error1]);
+
+    expect(result).not.toMatch(/.*Project ID.*Status.*/);
+    expect(result).toMatch(/.*Message.*/);
+    expect(result).toMatch(/.*Error.*/);
+  });
+
+  it('returns both GitlabClientError and Error messages', () => {
+    const error1 = new Error('Error');
+    const error2 = new GitlabClientError({ status: 405, projectId: 'group/A' });
+
+    const result = handleGitlabClientErrors([error1, error2]);
+
+    expect(result).toMatch(/.*Project ID.*Status.*/);
+    expect(result).toMatch(/.*group\/A.*405.*/);
+    expect(result).toMatch(/.*Message.*/);
+    expect(result).toMatch(/.*Error.*/);
   });
 });
