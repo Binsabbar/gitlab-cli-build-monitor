@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 const { JobBuilder } = require('../../__builders__');
 const { jobNonSuccessFilter: filter } = require('../../../src/services/filters');
 
@@ -41,6 +39,19 @@ describe('jobNonSuccessFilter', () => {
       const result = filter(successJobs);
 
       expect(result).toEqual([pendingJob]);
+    });
+
+    it('returns all jobs that has non success status', () => {
+      const pendingJob = new JobBuilder().withId('2').withStatus('pending').build();
+      const runningJob1 = new JobBuilder().withId('2').withStatus('running').build();
+      const runningJob2 = new JobBuilder().withId('2').withStatus('running').build();
+      successJobs.splice(2, 0, pendingJob);
+      successJobs.splice(2, 0, runningJob1);
+      successJobs.splice(2, 0, runningJob2);
+
+      const result = filter(successJobs);
+
+      expect(result).toIncludeAllMembers([pendingJob, runningJob1, runningJob2]);
     });
 
     it('return empty list when all jobs considered successful', () => {
