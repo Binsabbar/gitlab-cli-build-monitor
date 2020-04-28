@@ -42,9 +42,11 @@ describe('pipelineNonSuccessFilter', () => {
       expect(result).toEqual([runningPipeline]);
     });
 
-    it('return empty list when all pipelines have success or canceled status', () => {
+    it('return empty list when all pipelines have success, skipped or canceled status', () => {
       const canceledPipeline = new PipelineBuilder().withId('2').withStatus('cenceled').build();
+      const skippedPipeline = new PipelineBuilder().withId('4').withStatus('skipped').build();
       pipelines.splice(2, 0, canceledPipeline);
+      pipelines.splice(2, 0, skippedPipeline);
 
       const result = filter(pipelines);
 
