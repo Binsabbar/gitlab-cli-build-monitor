@@ -4,10 +4,9 @@ const { PipelineBuilder } = require('../../__builders__');
 const { pipelineNonSuccessFilter: filter } = require('../../../src/services/filters');
 
 describe('pipelineNonSuccessFilter', () => {
-  const now = moment().utc();
-
   describe('Non success status', () => {
     let pipelines = [];
+
     beforeEach(() => {
       pipelines = [
         new PipelineBuilder().withId('1').withStatus('success').build(),
@@ -54,13 +53,19 @@ describe('pipelineNonSuccessFilter', () => {
   });
 
   describe('filter most updated pipeline', () => {
+    const now = moment().utc();
+    const latestMasterPipeline = new PipelineBuilder().withRef('master').withId('19')
+      .withStatus('failed')
+      .setUpdatedAt(moment(now).subtract(10, 'h').format())
+      .build();
+
+    const latestDevPipeline = new PipelineBuilder().withRef('dev').withId('13')
+      .withStatus('pending')
+      .setUpdatedAt(moment(now).subtract(1, 'h').format())
+      .build();
+
     it('returns most updated pipelines for a ref - case1: same ref', () => {
-      const pipelines = [
-        new PipelineBuilder()
-          .withId('19')
-          .withStatus('failed')
-          .setUpdatedAt(moment(now).subtract(10, 'h').format())
-          .build(),
+      const pipelines = [latestMasterPipeline,
         new PipelineBuilder()
           .withId('12')
           .withStatus('pending')
@@ -70,42 +75,18 @@ describe('pipelineNonSuccessFilter', () => {
 
       const result = filter(pipelines);
 
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toEqual('12');
-      expect(result[0].status).toEqual('pending');
+      expect(result).toIncludeAllMembers([pipelines[1]]);
     });
 
     it('returns most updated pipelines for a ref - case2: multi refs', () => {
-      const pipelines = [
-        new PipelineBuilder()
-          .withRef('master')
-          .withId('19')
-          .withStatus('failed')
-          .setUpdatedAt(moment(now).subtract(10, 'h').format())
-          .build(),
-        new PipelineBuilder()
-          .withRef('dev')
-          .withId('12')
-          .withStatus('pending')
-          .setUpdatedAt(moment(now).subtract(2, 'h').format())
-          .build(),
-      ];
+      const pipelines = [latestMasterPipeline, latestDevPipeline];
 
       const result = filter(pipelines);
 
-      expect(result).toEqual(pipelines);
+      expect(result).toIncludeAllMembers(pipelines);
     });
 
     it('returns most updated pipelines for a ref - case3: mult refs with mult non-success', () => {
-      const latestDevPipeline = new PipelineBuilder().withRef('dev').withId('13')
-        .withStatus('pending')
-        .setUpdatedAt(moment(now).subtract(1, 'h').format())
-        .build();
-      const latestMasterPipeline = new PipelineBuilder().withRef('master').withId('19')
-        .withStatus('failed')
-        .setUpdatedAt(moment(now).subtract(10, 'h').format())
-        .build();
-
       const pipelines = [
         latestMasterPipeline,
         new PipelineBuilder()
@@ -126,8 +107,24 @@ describe('pipelineNonSuccessFilter', () => {
 
       const result = filter(pipelines);
 
-      expect(result).toHaveLength(2);
-      expect(result).toEqual(expected);
+      expect(result).toIncludeAllMembers(expected);
+    });
+
+    it('always includes running pipelines regardless of updated at', () => {
+      const pipelines = [
+        latestMasterPipeline,
+        new PipelineBuilder()
+          .withRef('master')
+          .withId('18')
+          .withStatus('running')
+          .setUpdatedAt(moment(now).subtract(10, 'h').format())
+          .build(),
+        latestDevPipeline,
+      ];
+
+      const result = filter(pipelines);
+
+      expect(result).toIncludeAllMembers(pipelines);
     });
   });
 });
