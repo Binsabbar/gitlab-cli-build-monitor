@@ -54,17 +54,17 @@ describe('pipelineNonSuccessFilter', () => {
   });
 
   describe('filter most updated pipeline', () => {
-    it('returns most updated pipelines for a ref - case1: all in same ref', () => {
+    it('returns most updated pipelines for a ref - case1: same ref', () => {
       const pipelines = [
         new PipelineBuilder()
           .withId('19')
           .withStatus('failed')
-          .setUpdatedAt(now.clone().subtract(10, 'h').toISOString())
+          .setUpdatedAt(moment(now).subtract(10, 'h').format())
           .build(),
         new PipelineBuilder()
           .withId('12')
           .withStatus('pending')
-          .setUpdatedAt(now.clone().subtract(2, 'h').toISOString())
+          .setUpdatedAt(moment(now).subtract(2, 'h').format())
           .build(),
       ];
 
@@ -75,25 +75,59 @@ describe('pipelineNonSuccessFilter', () => {
       expect(result[0].status).toEqual('pending');
     });
 
-    it('returns most updated pipelines for a ref - case1: all in different refs', () => {
+    it('returns most updated pipelines for a ref - case2: multi refs', () => {
       const pipelines = [
         new PipelineBuilder()
           .withRef('master')
           .withId('19')
           .withStatus('failed')
-          .setUpdatedAt(now.clone().subtract(10, 'h').toISOString())
+          .setUpdatedAt(moment(now).subtract(10, 'h').format())
           .build(),
         new PipelineBuilder()
           .withRef('dev')
           .withId('12')
           .withStatus('pending')
-          .setUpdatedAt(now.clone().subtract(2, 'h').toISOString())
+          .setUpdatedAt(moment(now).subtract(2, 'h').format())
           .build(),
       ];
 
       const result = filter(pipelines);
 
       expect(result).toEqual(pipelines);
+    });
+
+    it('returns most updated pipelines for a ref - case3: mult refs with mult non-success', () => {
+      const latestDevPipeline = new PipelineBuilder().withRef('dev').withId('13')
+        .withStatus('pending')
+        .setUpdatedAt(moment(now).subtract(1, 'h').format())
+        .build();
+      const latestMasterPipeline = new PipelineBuilder().withRef('master').withId('19')
+        .withStatus('failed')
+        .setUpdatedAt(moment(now).subtract(10, 'h').format())
+        .build();
+
+      const pipelines = [
+        latestMasterPipeline,
+        new PipelineBuilder()
+          .withRef('master')
+          .withId('20')
+          .withStatus('pending')
+          .setUpdatedAt(moment(now).subtract(12, 'h').format())
+          .build(),
+        latestDevPipeline,
+        new PipelineBuilder()
+          .withRef('dev')
+          .withId('12')
+          .withStatus('failed')
+          .setUpdatedAt(moment(now).subtract(2, 'h').format())
+          .build(),
+      ];
+      const expected = [latestMasterPipeline, latestDevPipeline];
+
+      const result = filter(pipelines);
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(expected);
     });
   });
 });
