@@ -3,10 +3,9 @@ const moment = require('moment');
 const NON_SUCCESS_STATUS = {
   FAILED: 'failed',
   RUNNING: 'running',
-  SKIPPED: 'skipped',
-  MANUAL: 'manual',
-  CREATED: 'created',
+  PENDING: 'pending',
 };
+
 const NONE_SUCCESS_VALUES = Object.values(NON_SUCCESS_STATUS);
 
 const isRunning = (job) => job.status === NON_SUCCESS_STATUS.RUNNING;
