@@ -5,29 +5,31 @@ const NON_SUCCESS_STATUS = {
   RUNNING: 'running',
   PENDING: 'pending',
 };
+const NONE_SUCCESS_VALUES = Object.values(NON_SUCCESS_STATUS);
 
 const isNoneSuccess = (pipeline) => {
   const { status } = pipeline;
-  return Object.values(NON_SUCCESS_STATUS).indexOf(status) !== -1;
+  return NONE_SUCCESS_VALUES.indexOf(status) !== -1;
 };
 
-const getLatestUpdated = (pipelines) => {
-  let latestUpdatedPipeline;
-  let currentUpdatedDate = moment(0);
+const getLastUpdated = (pipelineA, pipelineB) => {
+  if (moment(pipelineA.updatedAt).isAfter(pipelineB.updatedAt)) { return pipelineA; }
+  return pipelineB;
+};
 
+const filter = (pipelines) => {
+  const pipelinesByRefs = {};
   pipelines.forEach((pipeline) => {
-    if (moment(pipeline.updatedAt).isAfter(currentUpdatedDate)) {
-      latestUpdatedPipeline = pipeline;
-      currentUpdatedDate = pipeline.updatedAt;
+    if (isNoneSuccess(pipeline)) {
+      if (!pipelinesByRefs[pipeline.ref]) {
+        pipelinesByRefs[pipeline.ref] = pipeline;
+      } else {
+        pipelinesByRefs[pipeline.ref] = getLastUpdated(pipelinesByRefs[pipeline.ref], pipeline);
+      }
     }
   });
 
-  return [latestUpdatedPipeline];
-};
-const filter = (pipelines) => {
-  const nonSuccPipelines = pipelines.filter(isNoneSuccess);
-  if (nonSuccPipelines.length === 0) return nonSuccPipelines;
-  return getLatestUpdated(nonSuccPipelines);
+  return Object.values(pipelinesByRefs).flat();
 };
 
 exports.filter = filter;

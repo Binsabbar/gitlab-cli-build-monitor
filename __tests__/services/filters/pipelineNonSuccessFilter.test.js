@@ -53,21 +53,17 @@ describe('pipelineNonSuccessFilter', () => {
     });
   });
 
-  // always include running pipeline
-  describe('filters non success based on latest update and ref', () => {
-    // return list of pipelines that contains latest updated pipeline - same ref
-    it('returns pipelines list that has latest updated pipeline for a ref - same ref', () => {
+  describe('filter most updated pipeline', () => {
+    it('returns most updated pipelines for a ref - case1: all in same ref', () => {
       const pipelines = [
         new PipelineBuilder()
           .withId('19')
           .withStatus('failed')
-          .withRef('master')
           .setUpdatedAt(now.clone().subtract(10, 'h').toISOString())
           .build(),
         new PipelineBuilder()
           .withId('12')
           .withStatus('pending')
-          .withRef('master')
           .setUpdatedAt(now.clone().subtract(2, 'h').toISOString())
           .build(),
       ];
@@ -77,6 +73,27 @@ describe('pipelineNonSuccessFilter', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toEqual('12');
       expect(result[0].status).toEqual('pending');
+    });
+
+    it('returns most updated pipelines for a ref - case1: all in different refs', () => {
+      const pipelines = [
+        new PipelineBuilder()
+          .withRef('master')
+          .withId('19')
+          .withStatus('failed')
+          .setUpdatedAt(now.clone().subtract(10, 'h').toISOString())
+          .build(),
+        new PipelineBuilder()
+          .withRef('dev')
+          .withId('12')
+          .withStatus('pending')
+          .setUpdatedAt(now.clone().subtract(2, 'h').toISOString())
+          .build(),
+      ];
+
+      const result = filter(pipelines);
+
+      expect(result).toEqual(pipelines);
     });
   });
 });
