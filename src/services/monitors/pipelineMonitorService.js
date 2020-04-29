@@ -6,8 +6,7 @@ class PipelineMonitorService {
     this.getFilter = getFilter;
   }
 
-  getPipelines({ project }) {
-    const { id: projectId } = project;
+  getPipelines({ projectId }) {
     const filter = this.getFilter({ type: FILTER_TYPE.PIPELINE });
     return this.gitlabClient.getProjectPipelines({ projectId })
       .then((pipelines) => filter(pipelines));
