@@ -1,7 +1,7 @@
 const { when } = require('jest-when');
 
 const { JobMonitorService } = require('../../../src/services/monitors');
-const { ProjectBuilder, PipelineBuilder, JobBuilder } = require('../../__builders__');
+const { JobBuilder } = require('../../__builders__');
 
 jest.mock('../../../src/services/filters');
 jest.mock('../../../src/client');
@@ -12,8 +12,8 @@ const { GitlabClient } = require('../../../src/client');
 const jobFilterMock = jest.fn();
 
 describe('JobMonitorService', () => {
-  const project = new ProjectBuilder().withId('projectA').build();
-  const pipeline = new PipelineBuilder().build();
+  const projectId = 'projectA';
+  const pipelineId = '14';
   const unfilteredJobs = [
     new JobBuilder().withId('12').build(),
     new JobBuilder().withId('13').build(),
@@ -30,22 +30,22 @@ describe('JobMonitorService', () => {
 
   it('returns resolved promise of a list of filtered jobs given project & pipeline', async () => {
     when(gitlabClient.getPipelineJobs)
-      .calledWith({ projectId: project.id, pipelineId: pipeline.id })
+      .calledWith({ projectId, pipelineId })
       .mockResolvedValue(unfilteredJobs);
     when(getFilterMock)
       .calledWith({ type: FILTER_TYPE.JOB }).mockReturnValue(jobFilterMock);
     when(jobFilterMock).calledWith(unfilteredJobs).mockReturnValue(filteredJobs);
 
-    const jobs = await monitor.getJobs({ project, pipeline });
+    const jobs = await monitor.getJobs({ projectId, pipelineId });
 
     expect(jobs).toEqual(filteredJobs);
   });
 
   it('returns rejected promise when error occurs', () => {
     when(gitlabClient.getPipelineJobs)
-      .calledWith({ projectId: project.id, pipelineId: pipeline.id })
-      .mockRejectedValue(new Error('Error Occured'));
+      .calledWith({ projectId, pipelineId }).mockRejectedValue(new Error('Error Occured'));
 
-    return expect(monitor.getJobs({ project, pipeline })).rejects.toThrowError('Error Occured');
+    return expect(monitor.getJobs({ projectId, pipelineId }))
+      .rejects.toThrowError('Error Occured');
   });
 });
