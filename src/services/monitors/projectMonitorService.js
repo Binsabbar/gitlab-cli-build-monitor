@@ -21,7 +21,7 @@ class ProjectMonitorService {
       .then((pipelines) => {
         const promises = [];
         pipelines.forEach((pipeline) => {
-          promises.push(this.jobService.getJobs({ projectId, pipeline }));
+          promises.push(this.jobService.getJobs({ projectId, pipelineId: pipeline.id }));
         });
         return Promise.all(promises).then((values) => values.flat());
       });

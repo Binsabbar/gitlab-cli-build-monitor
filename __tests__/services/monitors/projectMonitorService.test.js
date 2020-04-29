@@ -67,9 +67,11 @@ describe('ProjectMonitorService', () => {
       when(pipelineMonitorService.getPipelines)
         .calledWith({ projectId }).mockResolvedValue(pipelines);
       when(jobMonitorService.getJobs)
-        .calledWith({ projectId, pipeline: pipelines[0] }).mockResolvedValue(jobsForPipeline12);
+        .calledWith({ projectId, pipelineId: pipelines[0].id })
+        .mockResolvedValue(jobsForPipeline12);
       when(jobMonitorService.getJobs)
-        .calledWith({ projectId, pipeline: pipelines[1] }).mockResolvedValue(jobsForPipeline13);
+        .calledWith({ projectId, pipelineId: pipelines[1].id })
+        .mockResolvedValue(jobsForPipeline13);
 
       return expect(monitor.getJobs({ projectId })).resolves
         .toIncludeSameMembers(jobsForPipeline12.concat(jobsForPipeline13));
@@ -86,9 +88,9 @@ describe('ProjectMonitorService', () => {
       when(pipelineMonitorService.getPipelines)
         .calledWith({ projectId }).mockResolvedValue(pipelines);
       when(jobMonitorService.getJobs)
-        .calledWith({ projectId, pipeline: pipelines[0] }).mockResolvedValue([]);
+        .calledWith({ projectId, pipelineId: pipelines[0].id }).mockResolvedValue([]);
       when(jobMonitorService.getJobs)
-        .calledWith({ projectId, pipeline: pipelines[1] }).mockResolvedValue([]);
+        .calledWith({ projectId, pipelineId: pipelines[1].id }).mockResolvedValue([]);
 
       return expect(monitor.getJobs({ projectId })).resolves.toEqual([]);
     });
@@ -104,9 +106,9 @@ describe('ProjectMonitorService', () => {
       when(pipelineMonitorService.getPipelines)
         .calledWith({ projectId }).mockResolvedValue(pipelines);
       when(jobMonitorService.getJobs)
-        .calledWith({ projectId, pipeline: pipelines[0] }).mockResolvedValue([]);
+        .calledWith({ projectId, pipelineId: pipelines[0].id }).mockResolvedValue([]);
       when(jobMonitorService.getJobs)
-        .calledWith({ projectId, pipeline: pipelines[1] }).mockRejectedValue(new Error('err'));
+        .calledWith({ projectId, pipelineId: pipelines[1].id }).mockRejectedValue(new Error('err'));
 
       return expect(monitor.getJobs({ projectId })).rejects.toThrow();
     });
