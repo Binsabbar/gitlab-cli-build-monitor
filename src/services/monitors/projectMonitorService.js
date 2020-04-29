@@ -7,8 +7,7 @@ class ProjectMonitorService {
     this.jobService = jobMonitorService;
   }
 
-  doesProjectExist({ project }) {
-    const { id: projectId } = project;
+  doesProjectExist({ projectId }) {
     return this.client.getProject({ projectId })
       .then((_) => true)
       .catch((error) => {

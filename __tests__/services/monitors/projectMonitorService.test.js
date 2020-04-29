@@ -13,6 +13,8 @@ const { GitlabClientError } = jest.requireActual('../../../src/client');
 
 describe('ProjectMonitorService', () => {
   const project = new ProjectBuilder().withId('projectA').build();
+  const projectId = 'projectA';
+
   const pipelines = [
     new PipelineBuilder().withId('12').build(),
     new PipelineBuilder().withId('13').build(),
@@ -39,25 +41,25 @@ describe('ProjectMonitorService', () => {
 
   describe('doesProjectExist', () => {
     it('returns a resolved promise with true if project exists', () => {
-      when(gitlabClient.getProject).calledWith({ projectId: project.id }).mockResolvedValue(true);
+      when(gitlabClient.getProject).calledWith({ projectId }).mockResolvedValue(true);
 
-      return expect(monitor.doesProjectExist({ project })).resolves.toBeTruthy();
+      return expect(monitor.doesProjectExist({ projectId })).resolves.toBeTruthy();
     });
 
     it('returns a resolved promise with false if project does not exist', () => {
       when(gitlabClient.getProject)
-        .calledWith({ projectId: project.id })
-        .mockRejectedValue(new GitlabClientError({ status: 404, project: project.id }));
+        .calledWith({ projectId })
+        .mockRejectedValue(new GitlabClientError({ status: 404, project: projectId }));
 
-      return expect(monitor.doesProjectExist({ project })).resolves.toBeFalsy();
+      return expect(monitor.doesProjectExist({ projectId })).resolves.toBeFalsy();
     });
 
     it('returns a rejected promise if non 404 error occurs', () => {
       when(gitlabClient.getProject)
-        .calledWith({ projectId: project.id })
-        .mockRejectedValue(new GitlabClientError({ status: 505, project: project.id }));
+        .calledWith({ projectId })
+        .mockRejectedValue(new GitlabClientError({ status: 505, project: projectId }));
 
-      return expect(monitor.doesProjectExist({ project })).rejects.toThrow();
+      return expect(monitor.doesProjectExist({ projectId })).rejects.toThrow();
     });
   });
 
