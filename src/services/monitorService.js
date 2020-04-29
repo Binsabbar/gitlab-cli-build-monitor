@@ -5,11 +5,18 @@ class MonitorService {
   }
 
   doProjectsExist({ projectIds }) {
-    const promises = [];
-    projectIds.forEach((projectId) => {
-      promises.push(this.projectService.doesProjectExist({ projectId }));
+    const promises = projectIds.map((projectId) => {
+      return this.projectService.doesProjectExist({ projectId });
     });
     return Promise.all(promises).then((_) => true);
+  }
+
+  checkStatus({ projectIds }) {
+    const promises = projectIds.map((projectId) => {
+      return this.projectService.getJobs({ projectId })
+        .then((jobs) => ({ projectId, jobs }));
+    });
+    return Promise.all(promises).then((values) => values.flat());
   }
 }
 exports.MonitorService = MonitorService;
