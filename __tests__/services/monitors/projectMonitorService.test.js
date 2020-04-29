@@ -4,7 +4,7 @@ const { when } = require('jest-when');
 jest.mock('../../../src/services/monitors');
 const { ProjectMonitorService } = jest.requireActual('../../../src/services/monitors');
 const { JobMonitorService, PipelineMonitorService } = require('../../../src/services/monitors');
-const { ProjectBuilder, PipelineBuilder, JobBuilder } = require('../../__builders__');
+const { PipelineBuilder, JobBuilder } = require('../../__builders__');
 
 jest.mock('../../../src/client');
 const { GitlabClient } = require('../../../src/client');
@@ -12,7 +12,6 @@ const { GitlabClient } = require('../../../src/client');
 const { GitlabClientError } = jest.requireActual('../../../src/client');
 
 describe('ProjectMonitorService', () => {
-  const project = new ProjectBuilder().withId('projectA').build();
   const projectId = 'projectA';
 
   const pipelines = [
@@ -49,7 +48,7 @@ describe('ProjectMonitorService', () => {
     it('returns a resolved promise with false if project does not exist', () => {
       when(gitlabClient.getProject)
         .calledWith({ projectId })
-        .mockRejectedValue(new GitlabClientError({ status: 404, project: projectId }));
+        .mockRejectedValue(new GitlabClientError({ status: 404, projectId }));
 
       return expect(monitor.doesProjectExist({ projectId })).resolves.toBeFalsy();
     });
@@ -57,7 +56,7 @@ describe('ProjectMonitorService', () => {
     it('returns a rejected promise if non 404 error occurs', () => {
       when(gitlabClient.getProject)
         .calledWith({ projectId })
-        .mockRejectedValue(new GitlabClientError({ status: 505, project: projectId }));
+        .mockRejectedValue(new GitlabClientError({ status: 505, projectId }));
 
       return expect(monitor.doesProjectExist({ projectId })).rejects.toThrow();
     });
@@ -66,52 +65,50 @@ describe('ProjectMonitorService', () => {
   describe('getJobs', () => {
     it('returns a resolved promise with jobs from all pipelines', () => {
       when(pipelineMonitorService.getPipelines)
-        .calledWith({ project }).mockResolvedValue(pipelines);
+        .calledWith({ projectId }).mockResolvedValue(pipelines);
       when(jobMonitorService.getJobs)
-        .calledWith({ project, pipeline: pipelines[0] }).mockResolvedValue(jobsForPipeline12);
+        .calledWith({ projectId, pipeline: pipelines[0] }).mockResolvedValue(jobsForPipeline12);
       when(jobMonitorService.getJobs)
-        .calledWith({ project, pipeline: pipelines[1] }).mockResolvedValue(jobsForPipeline13);
+        .calledWith({ projectId, pipeline: pipelines[1] }).mockResolvedValue(jobsForPipeline13);
 
-      return expect(monitor.getJobs({ project })).resolves
+      return expect(monitor.getJobs({ projectId })).resolves
         .toIncludeSameMembers(jobsForPipeline12.concat(jobsForPipeline13));
     });
 
     it('returns a resolved promise with empty array if no pipeline exists', () => {
       when(pipelineMonitorService.getPipelines)
-        .calledWith({ project }).mockResolvedValue([]);
+        .calledWith({ projectId }).mockResolvedValue([]);
 
-      return expect(monitor.getJobs({ project })).resolves.toEqual([]);
+      return expect(monitor.getJobs({ projectId })).resolves.toEqual([]);
     });
 
     it('returns a resolved promise with empty array if no jobs exists', () => {
       when(pipelineMonitorService.getPipelines)
-        .calledWith({ project }).mockResolvedValue(pipelines);
+        .calledWith({ projectId }).mockResolvedValue(pipelines);
       when(jobMonitorService.getJobs)
-        .calledWith({ project, pipeline: pipelines[0] }).mockResolvedValue([]);
+        .calledWith({ projectId, pipeline: pipelines[0] }).mockResolvedValue([]);
       when(jobMonitorService.getJobs)
-        .calledWith({ project, pipeline: pipelines[1] }).mockResolvedValue([]);
+        .calledWith({ projectId, pipeline: pipelines[1] }).mockResolvedValue([]);
 
-      return expect(monitor.getJobs({ project })).resolves.toEqual([]);
+      return expect(monitor.getJobs({ projectId })).resolves.toEqual([]);
     });
 
     it('returns a rejected promise if error occurs when getting pipelines', () => {
       when(pipelineMonitorService.getPipelines)
-        .calledWith({ project }).mockRejectedValue(new Error('error happens'));
+        .calledWith({ projectId }).mockRejectedValue(new Error('error happens'));
 
-
-      return expect(monitor.getJobs({ project })).rejects.toThrow();
+      return expect(monitor.getJobs({ projectId })).rejects.toThrow();
     });
 
     it('returns a rejected promise if error occurs when getting jobs', () => {
       when(pipelineMonitorService.getPipelines)
-        .calledWith({ project }).mockResolvedValue(pipelines);
+        .calledWith({ projectId }).mockResolvedValue(pipelines);
       when(jobMonitorService.getJobs)
-        .calledWith({ project, pipeline: pipelines[0] }).mockResolvedValue([]);
+        .calledWith({ projectId, pipeline: pipelines[0] }).mockResolvedValue([]);
       when(jobMonitorService.getJobs)
-        .calledWith({ project, pipeline: pipelines[1] }).mockRejectedValue(new Error('err'));
+        .calledWith({ projectId, pipeline: pipelines[1] }).mockRejectedValue(new Error('err'));
 
-
-      return expect(monitor.getJobs({ project })).rejects.toThrow();
+      return expect(monitor.getJobs({ projectId })).rejects.toThrow();
     });
   });
 });

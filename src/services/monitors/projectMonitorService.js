@@ -16,12 +16,12 @@ class ProjectMonitorService {
       });
   }
 
-  getJobs({ project }) {
-    return this.pipelineService.getPipelines({ project })
+  getJobs({ projectId }) {
+    return this.pipelineService.getPipelines({ projectId })
       .then((pipelines) => {
         const promises = [];
         pipelines.forEach((pipeline) => {
-          promises.push(this.jobService.getJobs({ project, pipeline }));
+          promises.push(this.jobService.getJobs({ projectId, pipeline }));
         });
         return Promise.all(promises).then((values) => values.flat());
       });
