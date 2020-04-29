@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
+const { FILTER_TYPE } = require('./filters');
 
 const handleStatus = (values) => {
   const promiseResult = values.map((v) => v.value);
@@ -15,9 +16,10 @@ const handleCheck = (values) => {
 };
 
 class PipelinesMonitor {
-  constructor({ gitlabClient, gitlabConfig }) {
+  constructor({ gitlabClient, gitlabConfig, getFilter }) {
     this.gitlabConfig = gitlabConfig;
     this.gitlabClient = gitlabClient;
+    this.getFilter = getFilter;
   }
 
   check() {
@@ -51,6 +53,16 @@ class PipelinesMonitor {
   }
 
   _getPipelineJobs(project, pipelines) {
+    const filteredPipelines = this.getFilter({ type: FILTER_TYPE.PIPELINE }).filter(pipelines);
+    const jobPromises = [];
+    filteredPipelines.forEach((pipeline) => {
+      jobPromises.push(
+        this.gitlabClient.getPipelineJobs({
+          projectId: project.id,
+          pipelineId: pipeline.id,
+        }),
+      );
+    });
     const jobs = this.gitlabClient.getPipelineJobs({
       projectId: project.id,
       pipelineId: pipelines[0].id,
@@ -59,6 +71,7 @@ class PipelinesMonitor {
   }
 
   _getRecentStatus(project, jobs) {
+    this.getFilter({ type: FILTER_TYPE.JOB }).filter(jobs);
     return { project, ...jobs[0] };
   }
 }

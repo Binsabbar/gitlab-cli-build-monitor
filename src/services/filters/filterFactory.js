@@ -1,8 +1,8 @@
 const { pipelineNonSuccessFilter, jobNonSuccessFilter } = require('.');
 
 const FILTER_TYPE = Object.freeze({
-  PIPELINE: Symbol('pipeline'),
-  JOB: Symbol('job'),
+  PIPELINE: 'pipeline',
+  JOB: 'job',
 });
 
 const getFilter = ({ type }) => {
