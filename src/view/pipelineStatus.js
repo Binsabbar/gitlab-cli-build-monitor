@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 const chalk = require('chalk');
 const Table = require('cli-table3');

@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 const mockAxios = require('axios');
@@ -27,7 +28,7 @@ const monitor = getService(SERVICES.MONITOR_SERVICE, config);
 
 describe('MonitorService', () => {
   mockGitlabResult();
-  it('resolves to true', () => {
+  it('resolves to true when checking projects', () => {
     return expect(monitor.doProjectsExist({ projectIds: config.projects })).resolves.toBeTruthy();
   });
 

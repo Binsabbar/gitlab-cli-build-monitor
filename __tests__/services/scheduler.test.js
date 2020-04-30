@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { loopTask, stopTask } = require('../../src/services');
 
 jest.useFakeTimers();
