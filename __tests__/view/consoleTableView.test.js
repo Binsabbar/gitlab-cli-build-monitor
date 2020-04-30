@@ -34,7 +34,7 @@ describe('consoleTableView', () => {
     consoleTableView.print();
 
     expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*id.*/));
+      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
   });
 
   it('includes current time in the output', () => {
@@ -54,7 +54,7 @@ describe('consoleTableView', () => {
     expect(mockLog)
       .toHaveBeenCalledWith(expect.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
     expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*id.*/));
+      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
   });
 
   it('empty tables rows', () => {
@@ -67,6 +67,6 @@ describe('consoleTableView', () => {
     expect(mockLog)
       .toHaveBeenCalledWith(expect.not.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
     expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*id.*/));
+      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
   });
 });
