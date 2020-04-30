@@ -1,9 +1,9 @@
 const { Project, Job, Pipeline } = require('../../src/models');
 const { GitlabParser } = require('../../src/client/gitlabParser');
 
-const project = require('./data/project.json');
-const pipeline = require('./data/pipeline.json');
-const job = require('./data/job.json');
+const project = require('../__data__/project.json');
+const pipeline = require('../__data__/pipeline.json');
+const job = require('../__data__/job.json');
 
 describe('GitlabParser', () => {
   it('parses project json into Project model', () => {

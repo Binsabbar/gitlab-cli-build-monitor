@@ -3,9 +3,9 @@ const mockAxios = require('axios');
 const { GitlabClient } = require('../../src/client');
 const { Project, Pipeline, Job } = require('../../src/models');
 
-const project = require('./data/project.json');
-const pipeline = require('./data/pipeline.json');
-const job = require('./data/job.json');
+const project = require('../__data__/project.json');
+const pipeline = require('../__data__/pipeline.json');
+const job = require('../__data__/job.json');
 
 jest.mock('axios');
 const axiosGetMock = jest.fn();
