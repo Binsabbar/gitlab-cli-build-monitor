@@ -1,3 +1,4 @@
+/* eslint-disable newline-per-chained-call */
 const moment = require('moment');
 
 const { PipelineBuilder } = require('../../__builders__');
@@ -9,9 +10,9 @@ describe('pipelineNonSuccessFilter', () => {
 
     beforeEach(() => {
       pipelines = [
-        new PipelineBuilder().withId('1').withStatus('success').build(),
-        new PipelineBuilder().withId('3').withStatus('success').build(),
-        new PipelineBuilder().withId('4').withStatus('success').build(),
+        new PipelineBuilder().withId('1').withStatus('success').withRef('dev').build(),
+        new PipelineBuilder().withId('3').withStatus('success').withRef('dev').build(),
+        new PipelineBuilder().withId('4').withStatus('success').withRef('dev').build(),
       ];
     });
 
@@ -50,7 +51,7 @@ describe('pipelineNonSuccessFilter', () => {
 
       const result = filter(pipelines);
 
-      expect(result).toEqual([]);
+      expect(result).toBeEmpty();
     });
   });
 
@@ -127,6 +128,23 @@ describe('pipelineNonSuccessFilter', () => {
       const result = filter(pipelines);
 
       expect(result).toIncludeAllMembers(pipelines);
+    });
+
+    it('returns [] when latest status == success for previosuly failing pipeline in ref', () => {
+      const pipelines = [
+        new PipelineBuilder().withRef('master').withId('19').withStatus('success')
+          .setUpdatedAt(moment(now).subtract(1, 'h').format()).build(),
+        new PipelineBuilder().withRef('master').withId('18').withStatus('failed')
+          .setUpdatedAt(moment(now).subtract(2, 'h').format()).build(),
+        new PipelineBuilder().withRef('dev').withId('10').withStatus('success')
+          .setUpdatedAt(moment(now).subtract(3, 'h').format()).build(),
+        new PipelineBuilder().withRef('dev').withId('9').withStatus('failed')
+          .setUpdatedAt(moment(now).subtract(5, 'h').format()).build(),
+      ];
+
+      const result = filter(pipelines);
+
+      expect(result).toBeEmpty();
     });
   });
 });
