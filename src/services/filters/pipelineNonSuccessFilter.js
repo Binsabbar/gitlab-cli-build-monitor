@@ -19,18 +19,19 @@ const getLastUpdated = (pipelineA, pipelineB) => {
 };
 
 const filter = (pipelines) => {
-  const pipelinesByRefs = {};
+  const latestUpdatedInRef = {};
   const runningPipelines = [];
 
   pipelines.forEach((pipeline) => {
     if (isRunning(pipeline)) runningPipelines.push(pipeline);
-    else if (isNoneSuccess(pipeline)) {
+    else {
       const { ref } = pipeline;
-      pipelinesByRefs[pipeline.ref] = getLastUpdated(pipelinesByRefs[ref] || pipeline, pipeline);
+      const piplineToCompareWith = latestUpdatedInRef[ref] || pipeline;
+      latestUpdatedInRef[pipeline.ref] = getLastUpdated(piplineToCompareWith, pipeline);
     }
   });
 
-  return Object.values(pipelinesByRefs).flat().concat(runningPipelines);
+  return Object.values(latestUpdatedInRef).filter(isNoneSuccess).concat(runningPipelines);
 };
 
 exports.filter = filter;
