@@ -1,16 +1,20 @@
-jest.mock('../../../src/services/filters');
+jest.mock('../../../src/services/filters/pipelineNonSuccessFilter');
+jest.mock('../../../src/services/filters/jobNonSuccessFilter');
 const { getFilter, FILTER_TYPE } = jest.requireActual('../../../src/services/filters');
-const { pipelineNonSuccessFilter, jobNonSuccessFilter } = require('../../../src/services/filters');
+// eslint-disable-next-line max-len
+const { filter: pipelineFilter } = require('../../../src/services/filters/pipelineNonSuccessFilter');
+const { filter: jobNonFilter } = require('../../../src/services/filters/jobNonSuccessFilter');
 
 describe('filterFactory', () => {
-  pipelineNonSuccessFilter.mockReturnValue(1);
-  jobNonSuccessFilter.mockReturnValue(2);
+  pipelineFilter.mockReturnValue(1);
+  jobNonFilter.mockReturnValue(2);
+
   it('returns pipeline filter function when given pipeline type', () => {
     const type = FILTER_TYPE.PIPELINE;
 
     const filter = getFilter({ type });
 
-    expect(filter).toEqual(pipelineNonSuccessFilter);
+    expect(filter).toEqual(pipelineFilter);
     expect(filter()).toEqual(1);
   });
 
@@ -19,7 +23,7 @@ describe('filterFactory', () => {
 
     const filter = getFilter({ type });
 
-    expect(filter).toEqual(jobNonSuccessFilter);
+    expect(filter).toEqual(jobNonFilter);
     expect(filter()).toEqual(2);
   });
 });

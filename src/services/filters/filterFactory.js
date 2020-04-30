@@ -1,4 +1,5 @@
-const { pipelineNonSuccessFilter, jobNonSuccessFilter } = require('.');
+const { filter: pipelineNonSuccessFilter } = require('./pipelineNonSuccessFilter');
+const { filter: jobNonSuccessFilter } = require('./jobNonSuccessFilter');
 
 const FILTER_TYPE = Object.freeze({
   PIPELINE: 'pipeline',
