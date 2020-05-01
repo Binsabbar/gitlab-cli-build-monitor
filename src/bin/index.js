@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-const { handleGitlabClientErrors, commandParser, GitlabConfig } = require('./utils');
-const { getService, SERVICES } = require('./objectsInitializer');
-const { Screen, ConsoleTableView } = require('./view');
+const { handleGitlabClientErrors, commandParser, GitlabConfig } = require('../utils');
+const { getService, SERVICES } = require('../objectsInitializer');
+const { Screen, ConsoleTableView } = require('../view');
 
 const gitlabConfig = new GitlabConfig({ ...commandParser.argv });
 const monitor = getService(SERVICES.MONITOR_SERVICE, gitlabConfig);
