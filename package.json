@@ -1,10 +1,19 @@
 {
-  "name": "pipeline-monitor",
-  "version": "0.0.1",
-  "description": "package for monitoring gitlab cicd",
-  "main": "src/index.js",
+  "name": "gitlab-cli-monitor",
+  "version": "1.0.0",
+  "description": "cli tool for monitoring gitlab builds",
+  "homepage": "https://github.com/Binsabbar/gitlab-cli-monitor#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binsabbar/gitlab-cli-monitor"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "src/bin/index.js",
+  "preferGlobal": true,
   "bin": {
-    "gitlab-pipline": "src/index.js"
+    "gitlab-cli-monitor": "src/bin/index.js"
   },
   "scripts": {
     "test": "jest --testPathIgnorePatterns=/__tests__/__integration__/",
@@ -16,7 +25,8 @@
   "keywords": [
     "cicd",
     "gitlab",
-    "monitor"
+    "monitor",
+    "builds"
   ],
   "author": "Mohammed Binsabbar",
   "license": "MIT",
@@ -36,7 +46,6 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "cli-table3": "^0.6.0",
     "js-yaml": "^3.13.1",
