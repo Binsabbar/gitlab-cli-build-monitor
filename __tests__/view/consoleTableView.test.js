@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const moment = require('moment');
-const { ConsoleTableView } = require('../../src/view/consoleTableView');
+const { ConsoleTableView } = require('../../src/view');
 
 describe('consoleTableView', () => {
   let consoleTableView;

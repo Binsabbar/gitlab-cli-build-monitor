@@ -1,6 +1,6 @@
 const yaml = require('js-yaml');
 const fs = require('fs');
-const { validate } = require('../../src/utils/configValidator.js');
+const { validate } = require('../../src/utils/configValidator');
 
 const path = `${__dirname}/data`;
 const parseYaml = (filename) => yaml.safeLoad(fs.readFileSync(`${path}/${filename}`), 'utf8');
