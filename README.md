@@ -46,21 +46,23 @@ projects: #either ID number or full path to project
   - 193
 updateIntervals: 50 # in seconds 
 ```
-`baseUrl`: the base url for your Gitlab (keep it as above if it not self hosted).
-
-`accessToken`: this token is used by cli to access Gitlab API to fetch projects status. You only need readonly token.
-
-`projects`: A list of projects to track by the build monitor. This can be a combination of id and path. Where path is: `NAMESPACE/PROJECT_PATH`.
-
-`updateIntervals`: The intervals in seconds for when to check for build status next.
+* `baseUrl`: the base url for your Gitlab (keep it as above if it not self hosted).
+* `accessToken`: this token is used by cli to access Gitlab API to fetch projects status. You only need readonly token.
+* `projects`: A list of projects to track by the build monitor. This can be a combination of id and path. Where path is: `NAMESPACE/PROJECT_PATH`.
+* `updateIntervals`: The intervals in seconds for when to check for build status next.
 
 # Features to add:
 
 [ ] Dockerise the tool.
+
 [ ] Specify from which date to fetch pipelines, for example only show in last 3 days. [Currently using Gitlab default] 
+
 [ ] Execlude projects pipelines based on refs. [Currently the tool tracks all refs] 
+
 [ ] Track projects pipelines based on refs.
+
 [ ] Explicitly specify job status to include. [Currently the tool tracks pending, running and failed only]
+
 [ ] Make Web-based UI version.
 
 # Limitations:
@@ -72,7 +74,7 @@ TL;DR Gitlab does not have dashboard and CCTray endpoint.
 When there is a need to track multiple projects build status, it is annoying and time consuming to check projects via UI individually. Gitlab does not provide a Dashboard that shows all pipeline status. This is really important when working as DevOps over multiple projects.
 
 ## Why CLI ?
-It is the simplest and fastest thing I could make in such a limited time, while getting value out of it. Check [Features to add](features-to-add) section.
+It is the simplest and fastest thing I could make in such a limited time, while getting value out of it. Also some people enjoy cli based tools more. For web-based, there are other projects such as [gitlab-monitor](https://github.com/timoschwarzer/gitlab-monitor) and [gitlab-ci-dashboard](https://github.com/emilianoeloi/gitlab-ci-dashboard)
 
 ## Why only pending, running or failed status? 
 This is inspired by the build monitor [nevergreen](https://github.com/build-canaries/nevergreen). You most likely need to take action if something is not right with your build. Also your build should always be green.
