@@ -10,13 +10,13 @@ const formatFinalMessage = (clientErrors, otherErros) => {
 };
 
 const handleGitlabClientErrors = (errors) => {
-  const clientErrors = new Table({ head: ['Project ID', 'Error Status'] });
+  const clientErrors = new Table({ head: ['Project ID', 'Error Status', 'Message'] });
   const otherErros = new Table({ head: ['Message'] });
   let errorsArr = errors;
   if (!Array.isArray(errors)) errorsArr = [errors];
   errorsArr.forEach((error) => {
     if (error.status && error.projectId) {
-      clientErrors.push([error.projectId, error.status]);
+      clientErrors.push([error.projectId, error.status, error.message]);
     } else {
       otherErros.push([error.message]);
     }
