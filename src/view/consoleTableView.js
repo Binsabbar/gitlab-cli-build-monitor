@@ -30,9 +30,8 @@ class ConsoleTableView {
     this.table.splice(0, this.table.length);
   }
 
-  print() {
-    const output = `Last Updated: ${moment().format('HH:mm:ss')}\n${this.table.toString()}`;
-    console.log(output);
+  toPrintableTable() {
+    return `Last Updated: ${moment().format('HH:mm:ss')}\n${this.table.toString()}`;
   }
 }
 
