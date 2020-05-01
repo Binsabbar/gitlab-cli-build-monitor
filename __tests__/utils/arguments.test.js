@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const argument = require('../../src/utils/arguments');
+const { commandParser } = require('../../src/utils');
 
 
-const parse = (commandParser, arg) => new Promise((resolve, reject) => {
-  commandParser.parse(arg, (error, argvs, output) => {
+const parse = (parser, arg) => new Promise((resolve, reject) => {
+  parser.parse(arg, (error, argvs, output) => {
     if (error) reject(error);
     resolve({ output, argvs });
   });
@@ -16,20 +16,20 @@ describe('script argument', () => {
   --help      Show help                                                [boolean]`;
 
   it('prints help menu when --help is given', async () => {
-    const { output } = await parse(argument.commandParser, '--help');
+    const { output } = await parse(commandParser, '--help');
 
     expect(output).toBe(expectedDefaultOutput);
   });
 
   it('demands -f or --file when they are not given', async () => {
-    await expect(parse(argument.commandParser, '')).rejects.toThrow('Missing required argument: f');
+    await expect(parse(commandParser, '')).rejects.toThrow('Missing required argument: f');
   });
 
   describe('when arg for a given option is missing', () => {
     const sharedTest = (opt) => {
       it(`shows error when ${opt} args are missing`, async () => {
         const errMsg = opt.replace(/-/g, '');
-        await expect(parse(argument.commandParser, `${opt}`))
+        await expect(parse(commandParser, `${opt}`))
           .rejects.toThrow(`Not enough arguments following: ${errMsg}`);
       });
     };
@@ -40,7 +40,7 @@ describe('script argument', () => {
   describe('when arugments are passed to options', () => {
     const sharedTest = (opt) => {
       it(`does not show error for ${opt}`, async () => {
-        const { output } = await parse(argument.commandParser, `${opt} ./example-config.yml`);
+        const { output } = await parse(commandParser, `${opt} ./example-config.yml`);
         expect(output).toEqual('');
       });
     };
@@ -50,7 +50,7 @@ describe('script argument', () => {
 
   describe('when config file is given', () => {
     it('parses the file into argvs', async () => {
-      const { argvs } = await parse(argument.commandParser, '--file ./example-config.yml');
+      const { argvs } = await parse(commandParser, '--file ./example-config.yml');
       const expectedConfigs = {
         baseUrl: 'https://gitlab.com',
         accessToken: 'some-token-goes-here',
@@ -65,18 +65,18 @@ describe('script argument', () => {
 
     it('returns error when configuration file is invalid', async () => {
       const configFile = `${__dirname}/data/invalid-intervals-3.yml`;
-      await expect(parse(argument.commandParser, `--file ${configFile}`)).rejects.toThrow();
+      await expect(parse(commandParser, `--file ${configFile}`)).rejects.toThrow();
     });
 
     it('returns error when configuration file does not exist', async () => {
       const configFile = `${__dirname}/data/i-do-no-exist.yml`;
-      await expect(parse(argument.commandParser, `--file ${configFile}`))
+      await expect(parse(commandParser, `--file ${configFile}`))
         .rejects.toThrow('File does not exist');
     });
 
     it('returns error when configuration file is not a valid yaml', async () => {
       const configFile = `${__dirname}/data/invalid-yaml.yml`;
-      await expect(parse(argument.commandParser, `--file ${configFile}`))
+      await expect(parse(commandParser, `--file ${configFile}`))
         .rejects.toThrow('Invalid Yaml');
     });
   });

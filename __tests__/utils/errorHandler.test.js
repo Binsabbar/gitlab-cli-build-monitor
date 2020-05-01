@@ -1,4 +1,4 @@
-const { handleGitlabClientErrors } = require('../../src/utils/errorHandler.js');
+const { handleGitlabClientErrors } = require('../../src/utils');
 const { GitlabClientError } = require('../../src/client');
 
 describe('serviceErrorHandler', () => {

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable global-require */
 const readline = require('readline');
-const { Screen } = require('../../src/view/screen');
+const { Screen } = require('../../src/view');
 
 jest.mock('readline');
 readline.moveCursor = jest.fn((strem, x, y, callback) => callback());
