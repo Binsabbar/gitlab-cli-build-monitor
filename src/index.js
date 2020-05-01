@@ -15,15 +15,24 @@ function printStatus() {
   screen.screenWrite(log);
 }
 
-setInterval(() => {
-  monitor.checkStatus({ projectIds: gitlabConfig.projects })
-    .then((status) => {
-      status.forEach((s) => {
-        s.jobs.forEach((job) => consoleTableView.addStatusRow({ projectId: s.projectId, job }));
-      });
-      printStatus();
-    })
-    .catch((e) => {
-      console.log(handleGitlabClientErrors(e));
-    });
-}, gitlabConfig.updateIntervals * 1000);
+const projectIds = gitlabConfig.projects;
+monitor.doProjectsExist({ projectIds })
+  .then(() => {
+    setInterval(() => {
+      monitor.checkStatus({ projectIds })
+        .then((status) => {
+          status.forEach((s) => {
+            s.jobs.forEach((job) => consoleTableView.addStatusRow({ projectId: s.projectId, job }));
+          });
+          printStatus();
+        })
+        .catch((e) => {
+          screen.screenWrite(handleGitlabClientErrors(e));
+          setTimeout(() => process.exit(-1), 500);
+        });
+    }, gitlabConfig.updateIntervals * 1000);
+  })
+  .catch((e) => {
+    screen.screenWrite(handleGitlabClientErrors(e));
+    setTimeout(() => process.exit(-1), 500);
+  });
