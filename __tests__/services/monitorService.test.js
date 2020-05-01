@@ -33,6 +33,17 @@ describe('MonitorService', () => {
       when(projectMonitorService.doesProjectExist).calledWith({ projectId: projectIds[1] })
         .mockResolvedValueOnce(true);
       when(projectMonitorService.doesProjectExist).calledWith({ projectId: projectIds[2] })
+        .mockResolvedValueOnce(false);
+
+      return expect(monitor.doProjectsExist({ projectIds })).rejects.toThrow();
+    });
+
+    it('returns a rejected promise if error occurs', () => {
+      when(projectMonitorService.doesProjectExist).calledWith({ projectId: projectIds[0] })
+        .mockResolvedValueOnce(true);
+      when(projectMonitorService.doesProjectExist).calledWith({ projectId: projectIds[1] })
+        .mockResolvedValueOnce(true);
+      when(projectMonitorService.doesProjectExist).calledWith({ projectId: projectIds[2] })
         .mockRejectedValueOnce(new Error('error'));
 
       return expect(monitor.doProjectsExist({ projectIds })).rejects.toThrowError('error');
