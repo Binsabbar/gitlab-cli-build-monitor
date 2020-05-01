@@ -9,7 +9,7 @@ describe('serviceErrorHandler', () => {
     const result = handleGitlabClientErrors([error1, error3]);
 
     expect(result).not.toMatch(/.*Message.*/);
-    expect(result).toMatch(/.*Project ID.*Status.*/);
+    expect(result).toMatch(/.*Project ID.*Error Status.*/);
     expect(result).toMatch(/.*1.*401.*/);
     expect(result).toMatch(/.*group\/A.*405.*/);
   });
@@ -19,7 +19,17 @@ describe('serviceErrorHandler', () => {
 
     const result = handleGitlabClientErrors([error1]);
 
-    expect(result).not.toMatch(/.*Project ID.*Status.*/);
+    expect(result).not.toMatch(/.*Project ID.*Error Status.*/);
+    expect(result).toMatch(/.*Message.*/);
+    expect(result).toMatch(/.*Error.*/);
+  });
+
+  it('returns message of the error if it is an array', () => {
+    const error1 = new Error('Error');
+
+    const result = handleGitlabClientErrors(error1);
+
+    expect(result).not.toMatch(/.*Project ID.*Error Status.*/);
     expect(result).toMatch(/.*Message.*/);
     expect(result).toMatch(/.*Error.*/);
   });
@@ -30,7 +40,7 @@ describe('serviceErrorHandler', () => {
 
     const result = handleGitlabClientErrors([error1, error2]);
 
-    expect(result).toMatch(/.*Project ID.*Status.*/);
+    expect(result).toMatch(/.*Project ID.*Error Status.*/);
     expect(result).toMatch(/.*group\/A.*405.*/);
     expect(result).toMatch(/.*Message.*/);
     expect(result).toMatch(/.*Error.*/);
