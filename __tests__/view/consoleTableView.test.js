@@ -4,9 +4,6 @@ const { ConsoleTableView } = require('../../src/view/consoleTableView');
 
 describe('consoleTableView', () => {
   let consoleTableView;
-  const mockLog = jest.fn();
-  const actualLog = console.log;
-
   const row = {
     projectId: 'my pro',
     job: {
@@ -23,50 +20,44 @@ describe('consoleTableView', () => {
   beforeEach(() => {
     consoleTableView = new ConsoleTableView();
     jest.resetAllMocks();
-    console.log = mockLog;
-  });
-
-  afterEach(() => {
-    console.log = actualLog;
   });
 
   it('includes headers in the output', () => {
-    consoleTableView.print();
+    const printableTable = consoleTableView.toPrintableTable();
 
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
+    expect(printableTable)
+      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
   });
 
   it('includes current time in the output', () => {
     const expected = `Last Updated: ${moment().format('HH:mm:ss')}`;
 
-    consoleTableView.print();
+    const printableTable = consoleTableView.toPrintableTable();
 
-    expect(mockLog).toHaveBeenCalledWith(expect.stringMatching(expected));
+    expect(printableTable).toEqual(expect.stringMatching(expected));
   });
 
   it('includes status in a row in the output', () => {
     consoleTableView.addStatusRow(row);
-    consoleTableView.print();
+    const printableTable = consoleTableView.toPrintableTable();
 
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*my pro.*failed.*build.*build-node.*/));
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
+    expect(printableTable).toEqual(expect.stringMatching(/.*my pro.*failed.*build.*build-node.*/));
+    expect(printableTable)
+      .toEqual(expect.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
+    expect(printableTable)
+      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
   });
 
   it('empty tables rows', () => {
     consoleTableView.addStatusRow(row);
     consoleTableView.clearRows();
-    consoleTableView.print();
+    const printableTable = consoleTableView.toPrintableTable();
 
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.not.stringMatching(/.*my pro.*failed.*build.*build-node.*/));
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.not.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
-    expect(mockLog)
-      .toHaveBeenCalledWith(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
+    expect(printableTable)
+      .toEqual(expect.not.stringMatching(/.*my pro.*failed.*build.*build-node.*/));
+    expect(printableTable)
+      .toEqual(expect.not.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
+    expect(printableTable)
+      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
   });
 });
