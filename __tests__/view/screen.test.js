@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 /* eslint-disable global-require */
 const readline = require('readline');
@@ -41,7 +42,7 @@ describe('Screen', () => {
     expect(readline.moveCursor).toHaveBeenCalledWith(process.stdout, -2, -2, expect.anything());
   });
 
-  it('takes into account the number of previously written lines of output + curren line entered via stdin ', () => {
+  it('takes into account the number of previously written lines of output + curren line entered via stdin', () => {
     screen.screenWrite('three\nlines\nlog message'); // previous lines of output
     simulateOneLineEnteredViaStdin();
     simulateOneLineEnteredViaStdin();
