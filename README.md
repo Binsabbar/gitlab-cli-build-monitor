@@ -33,18 +33,6 @@ Run the monitor:
 XXXXXX -f build-config.yml
 ```
 
-## Why do I need it?
-TL;DR Gitlab does not have dashboard and CCTray endpoint.
-
-When there is a need to track multiple projects build status, it is annoying and time consuming to check projects via UI individually. Gitlab does not provide a Dashboard that shows all pipeline status. This is really important when working as DevOps over multiple projects.
-
-## Why CLI ?
-It is the simplest and fastest thing I could make in such a limited time, while getting value out of it. Check [Features to add](features-to-add) section.
-
-## Why only pending, running or failed status? 
-This is inspired by the build monitor [nevergreen](https://github.com/build-canaries/nevergreen). You most likely need to take action if something is not right with your build. Also your build should always be green.
-
-
 # Configuration
 The tool accepts a single argument to a configuration file for Gitlab.
 
@@ -74,6 +62,17 @@ updateIntervals: 50 # in seconds
 
 # Limitations:
 If you are going to track lots of projects that have lots of unsuccessful status, then the output will not look nice, unless you have a big screen. A way around this is to have multiple tabs open with different configuration files for each groups of projects.
+
+## Why do I need it?
+TL;DR Gitlab does not have dashboard and CCTray endpoint.
+
+When there is a need to track multiple projects build status, it is annoying and time consuming to check projects via UI individually. Gitlab does not provide a Dashboard that shows all pipeline status. This is really important when working as DevOps over multiple projects.
+
+## Why CLI ?
+It is the simplest and fastest thing I could make in such a limited time, while getting value out of it. Check [Features to add](features-to-add) section.
+
+## Why only pending, running or failed status? 
+This is inspired by the build monitor [nevergreen](https://github.com/build-canaries/nevergreen). You most likely need to take action if something is not right with your build. Also your build should always be green.
 
 # Contribution
 Please help me improve this tool further by contributing to it. Also send me any feedback at mo.opensource.projects@gmail.com, with prefix title `[gitlab-cli-monitor] YOUR_EMAIL_TITLE`
