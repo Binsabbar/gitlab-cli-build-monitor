@@ -47,8 +47,11 @@ projects: #either ID number or full path to project
 updateIntervals: 50 # in seconds 
 ```
 `baseUrl`: the base url for your Gitlab (keep it as above if it not self hosted).
+
 `accessToken`: this token is used by cli to access Gitlab API to fetch projects status. You only need readonly token.
+
 `projects`: A list of projects to track by the build monitor. This can be a combination of id and path. Where path is: `NAMESPACE/PROJECT_PATH`.
+
 `updateIntervals`: The intervals in seconds for when to check for build status next.
 
 # Features to add:
