@@ -1,5 +1,5 @@
 # Gitlab Build Monitor
-![Node.js CI](https://github.com/Binsabbar/gitlab-ci-monitor/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/Binsabbar/gitlab-cli-build-monitor/workflows/Node.js%20CI/badge.svg)
 
 A simple cli-based build monitor tool for Gitlab. It only monitors status for non success builds, which are:
 
@@ -16,8 +16,8 @@ __Note: docker image is available if prefered, see section below.__
 
 Install the package globally (or locally if you prefer)
 
-* using npm: `npm install -g gitlab-cli-monitor`
-* using yarn: `yarn global add gitlab-cli-monitor`
+* using npm: `npm install -g gitlab-cli-build-monitor`
+* using yarn: `yarn global add gitlab-cli-build-monitor`
 
 create a configuration file as following:
 
@@ -34,14 +34,14 @@ updateIntervals: 50 # in seconds
 
 Run the monitor:
 ```
-gitlab-cli-monitor -f build-config.yml
+gitlab-cli-build-monitor -f build-config.yml
 ```
 
 ### Run in Docker
 Create the configuration file above, and mount it to the container to `/app/config`
 then run the container as following:
 ```
-docker run -it -v PATH_TO_CONFIG/YOUR_CONFIG.yml:/app/config.yml binsabbar/gitlab-cli-monitor:latest
+docker run -it -v PATH_TO_CONFIG/YOUR_CONFIG.yml:/app/config.yml binsabbar/gitlab-cli-build-monitor:latest
 ```
 # Configuration
 The tool accepts a single argument to a configuration file for Gitlab.
@@ -86,4 +86,4 @@ It is the simplest and fastest thing I could make in such a limited time, while 
 This is inspired by the build monitor [nevergreen](https://github.com/build-canaries/nevergreen). You most likely need to take action if something is not right with your build. Also, your build should always be green.
 
 # Contribution
-Please help me improve this tool further by contributing to it. Also send me any feedback at mo.opensource.projects@gmail.com, with prefix title `[gitlab-cli-monitor] YOUR_EMAIL_TITLE`
+Please help me improve this tool further by contributing to it. Also send me any feedback at mo.opensource.projects@gmail.com, with prefix title `[gitlab-cli-build-monitor] YOUR_EMAIL_TITLE`

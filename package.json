@@ -1,11 +1,11 @@
 {
-  "name": "gitlab-cli-monitor",
+  "name": "gitlab-cli-build-monitor",
   "version": "1.0.0",
   "description": "cli tool for monitoring gitlab builds",
-  "homepage": "https://github.com/Binsabbar/gitlab-cli-monitor#readme",
+  "homepage": "https://github.com/Binsabbar/gitlab-cli-build-monitor#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Binsabbar/gitlab-cli-monitor"
+    "url": "git+https://github.com/Binsabbar/gitlab-cli-build-monitor"
   },
   "engines": {
     "node": ">=8"
@@ -16,7 +16,7 @@
   "main": "src/bin/index.js",
   "preferGlobal": true,
   "bin": {
-    "gitlab-cli-monitor": "src/bin/index.js"
+    "gitlab-cli-build-monitor": "src/bin/index.js"
   },
   "scripts": {
     "test": "jest --testPathIgnorePatterns=/__tests__/__integration__/",
