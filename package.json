@@ -10,6 +10,9 @@
   "engines": {
     "node": ">=8"
   },
+  "files": [
+    "./src/**/*", "package.json"
+  ],
   "main": "src/bin/index.js",
   "preferGlobal": true,
   "bin": {
