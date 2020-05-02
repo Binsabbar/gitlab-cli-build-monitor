@@ -30,12 +30,19 @@ const checkStatus = () => {
     });
 };
 
+let intervalId;
 monitor.doProjectsExist({ projectIds })
   .then(() => {
     checkStatus();
-    setInterval(checkStatus, gitlabConfig.updateIntervals * 1000);
+    intervalId = setInterval(checkStatus, gitlabConfig.updateIntervals * 1000);
   })
   .catch((e) => {
     screen.screenWrite(handleGitlabClientErrors(e));
     setTimeout(() => process.exit(-1), 500);
   });
+
+process.on('SIGINT', () => {
+  clearInterval(intervalId);
+  screen.screenWrite('Existing ...');
+  process.exit();
+});
