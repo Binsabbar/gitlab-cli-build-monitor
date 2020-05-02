@@ -1,6 +1,6 @@
 {
   "name": "gitlab-cli-build-monitor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "cli tool for monitoring gitlab builds",
   "homepage": "https://github.com/Binsabbar/gitlab-cli-build-monitor#readme",
   "repository": {
@@ -11,7 +11,8 @@
     "node": ">=8"
   },
   "files": [
-    "src/**/*.js", "package.json"
+    "src/**/*.js",
+    "package.json"
   ],
   "main": "src/bin/index.js",
   "preferGlobal": true,
