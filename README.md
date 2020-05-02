@@ -12,6 +12,8 @@ A simple cli-based build monitor tool for Gitlab. It only monitors status for no
 In other words, it makes it obvious which project build needs your attention! The tools uses Gitlab `v4 API` to get information about project's pipelines and jobs.
 
 ## Quick Start
+__Note: docker image is available if prefered, see section below.__
+
 Install the package globally (or locally if you prefer)
 
 * using npm: `npm install -g gitlab-cli-monitor`
@@ -35,6 +37,12 @@ Run the monitor:
 gitlab-cli-monitor -f build-config.yml
 ```
 
+### Run in Docker
+Create the configuration file above, and mount it to the container to `/app/config`
+then run the container as following:
+```
+docker run -it -v PATH_TO_CONFIG/YOUR_CONFIG.yml:/app/config.yml binsabbar/gitlab-cli-monitor:latest
+```
 # Configuration
 The tool accepts a single argument to a configuration file for Gitlab.
 
