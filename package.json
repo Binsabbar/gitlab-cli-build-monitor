@@ -11,7 +11,7 @@
     "node": ">=8"
   },
   "files": [
-    "./src/**/*", "package.json"
+    "src/**/*.js", "package.json"
   ],
   "main": "src/bin/index.js",
   "preferGlobal": true,
