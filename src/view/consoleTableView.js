@@ -27,7 +27,9 @@ class ConsoleTableView {
   }
 
   clearRows() {
-    this.table.splice(0, this.table.length);
+    this.table = new Table({
+      head: ['project name', 'status', 'stage', 'job', 'ref', 'JobId'],
+    });
   }
 
   toPrintableTable() {
