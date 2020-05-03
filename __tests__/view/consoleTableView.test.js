@@ -26,11 +26,11 @@ describe('consoleTableView', () => {
     const printableTable = consoleTableView.toPrintableTable();
 
     expect(printableTable)
-      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
+      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*jobId.*finished/));
   });
 
   it('includes current time in the output', () => {
-    const expected = `Last Updated: ${moment().format('HH:mm:ss')}`;
+    const expected = `Last Updated at: ${moment().format('HH:mm:ss')}`;
 
     const printableTable = consoleTableView.toPrintableTable();
 
@@ -45,7 +45,7 @@ describe('consoleTableView', () => {
     expect(printableTable)
       .toEqual(expect.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
     expect(printableTable)
-      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
+      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*jobId.*finished.*/));
   });
 
   it('empty tables rows', () => {
@@ -58,6 +58,53 @@ describe('consoleTableView', () => {
     expect(printableTable)
       .toEqual(expect.not.stringMatching(/.*my pro.*.*build-node.*my-ref.*10946.*/));
     expect(printableTable)
-      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*JobId.*/));
+      .toEqual(expect.stringMatching(/.*project name.*status.*stage.*job.*ref.*jobId.*finished.*/));
+  });
+
+  describe('finished field', () => {
+    it('returns "-" if finishedAt is empty', () => {
+      row.job.finishedAt = undefined;
+      consoleTableView.addStatusRow(row);
+
+      const printableTable = consoleTableView.toPrintableTable();
+
+      expect(printableTable).toEqual(expect.stringMatching(/.*-.*/));
+    });
+
+    it('returns XX seconds ago if finishedAt is less than a minute from current time', () => {
+      row.job.finishedAt = moment().utc().subtract('55', 'seconds').toISOString();
+      consoleTableView.addStatusRow(row);
+
+      const printableTable = consoleTableView.toPrintableTable();
+
+      expect(printableTable).toEqual(expect.stringMatching(/.*55 seconds ago.*/));
+    });
+
+    it('returns XX minutes ago if finishedAt is less than an hour from current time', () => {
+      row.job.finishedAt = moment().utc().subtract('55', 'minutes').toISOString();
+      consoleTableView.addStatusRow(row);
+
+      const printableTable = consoleTableView.toPrintableTable();
+
+      expect(printableTable).toEqual(expect.stringMatching(/.*55 minutes ago.*/));
+    });
+
+    it('returns XX hours ago if finishedAt is less than a day from current time', () => {
+      row.job.finishedAt = moment().utc().subtract('23', 'hours').toISOString();
+      consoleTableView.addStatusRow(row);
+
+      const printableTable = consoleTableView.toPrintableTable();
+
+      expect(printableTable).toEqual(expect.stringMatching(/.*23 hours ago.*/));
+    });
+
+    it('returns XX days ago if finishedAt is more than a day', () => {
+      row.job.finishedAt = moment().utc().subtract('23', 'days').toISOString();
+      consoleTableView.addStatusRow(row);
+
+      const printableTable = consoleTableView.toPrintableTable();
+
+      expect(printableTable).toEqual(expect.stringMatching(/.*23 days ago.*/));
+    });
   });
 });
