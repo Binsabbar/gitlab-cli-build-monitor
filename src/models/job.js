@@ -2,7 +2,7 @@
 
 class Job {
   constructor({
-    id, name, stage, status, started_at, finished_at, ref,
+    id, name, stage, status, started_at, finished_at, ref, created_at,
   }) {
     this.id = id;
     this.name = name;
@@ -11,6 +11,7 @@ class Job {
     this.finishedAt = finished_at;
     this.startedAt = started_at;
     this.ref = ref;
+    this.createdAt = created_at;
   }
 }
 
