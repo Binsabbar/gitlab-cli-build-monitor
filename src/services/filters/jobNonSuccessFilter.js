@@ -9,8 +9,8 @@ const NON_SUCCESS_STATUS = {
 const NONE_SUCCESS_VALUES = Object.values(NON_SUCCESS_STATUS);
 
 const isNoneSuccess = (job) => NONE_SUCCESS_VALUES.indexOf(job.status) !== -1;
-const isFailedJob = (job) => job.status === NON_SUCCESS_STATUS.FAILED
-const isNotFailedJob = (job) => job.status !== NON_SUCCESS_STATUS.FAILED
+const isFailedJob = (job) => job.status === NON_SUCCESS_STATUS.FAILED;
+const isNotFailedJob = (job) => job.status !== NON_SUCCESS_STATUS.FAILED;
 
 const initGroupJobs = (acc, job) => {
   const jobKey = `${job.stage}.${job.name}`;
