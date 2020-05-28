@@ -34,6 +34,7 @@ class GitlabParser {
       status,
       started_at,
       finished_at,
+      created_at,
       ref,
     } = job;
 
@@ -44,6 +45,7 @@ class GitlabParser {
       status,
       started_at,
       finished_at,
+      created_at,
       ref,
     });
   }

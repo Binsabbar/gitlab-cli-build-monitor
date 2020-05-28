@@ -101,7 +101,7 @@ describe('GitlabClient', () => {
   describe('getPipelineJobs', () => {
     const requestArgs = { projectId: 23, pipelineId: 12 };
 
-    it('returns pipeline details', async () => {
+    it('returns jobs details', async () => {
       axiosGetMock.mockResolvedValue({ data: [job, { ...job, id: 1 }] });
       const expected = {
         id: 10946,
@@ -110,6 +110,7 @@ describe('GitlabClient', () => {
         status: 'failed',
         started_at: '2000-04-22T13:39:15.737Z',
         finished_at: '2000-04-22T13:39:32.939Z',
+        created_at: '2000-04-22T13:39:13.283Z',
         ref: 'my-ref',
       };
 
