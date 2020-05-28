@@ -42,6 +42,7 @@ describe('MonitorService', () => {
         status: 'failed',
         finishedAt: '2000-04-22T13:39:32.939Z',
         startedAt: '2000-04-22T13:39:15.737Z',
+        createdAt: '2000-04-22T13:39:13.283Z',
         ref: 'my-ref',
       }],
     }];
